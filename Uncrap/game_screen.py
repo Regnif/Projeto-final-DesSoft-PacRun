@@ -4,7 +4,7 @@ from os import path
 
 from config import img_dir, snd_dir, fnt_dir, WIDTH, HEIGHT, BLACK, YELLOW, RED, FPS, QUIT
 
-# Classe Jogador que representa a nave
+# Classe Jogador que representa o Pac
 class Player(pygame.sprite.Sprite):
     
     # Construtor da classe.
@@ -170,7 +170,7 @@ class Explosion(pygame.sprite.Sprite):
 # Carrega todos os assets uma vez só.
 def load_assets(img_dir, snd_dir, fnt_dir):
     assets = {}
-    assets["player_img"] = pygame.image.load(path.join(img_dir, "playerShip1_orange.png")).convert()
+    assets["player_img"] = pygame.image.load(path.join(img_dir, "Pac.png")).convert()
     assets["mob_img"] = pygame.image.load(path.join(img_dir, "meteorBrown_med1.png")).convert()
     assets["bullet_img"] = pygame.image.load(path.join(img_dir, "laserRed16.png")).convert()
     assets["background"] = pygame.image.load(path.join(img_dir, 'starfield.png')).convert()
