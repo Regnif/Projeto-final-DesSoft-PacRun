@@ -179,7 +179,7 @@ def load_assets(img_dir, snd_dir, fnt_dir):
     assets["player_img"] = pygame.image.load(path.join(img_dir, "Pac.png")).convert()
     assets["mob_img"] = pygame.image.load(path.join(img_dir, "meteorBrown_med1.png")).convert()
     assets["bullet_img"] = pygame.image.load(path.join(img_dir, "laserRed16.png")).convert()
-    assets["background"] = pygame.image.load(path.join(img_dir, 'starfield.png')).convert()
+    assets["background"] = pygame.image.load(path.join(img_dir, 'Plano_de_fundo.png')).convert()
     assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl3.wav'))
     assets["destroy_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl6.wav'))
     assets["pew_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'pew.wav'))
