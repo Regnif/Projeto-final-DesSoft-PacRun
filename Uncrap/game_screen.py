@@ -31,6 +31,7 @@ class Player(pygame.sprite.Sprite):
         
         # Velocidade da nave
         self.speedx = 0
+        self.speedy = 0
         
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = 35
@@ -38,12 +39,17 @@ class Player(pygame.sprite.Sprite):
     # Metodo que atualiza a posição da navinha
     def update(self):
         self.rect.x += self.speedx
+        self.rect.y += self.speedy
         
         # Mantem dentro da tela
         if self.rect.right > WIDTH:
             self.rect.right = WIDTH
         if self.rect.left < 0:
             self.rect.left = 0
+        if self.rect.top > HEIGHT:
+            self.rect.top = HEIGHT
+        if self.rect.bottom < 0:
+            self.rect.bottom = 0
                     
 # Classe Mob que representa os meteoros
 class Mob(pygame.sprite.Sprite):
@@ -109,7 +115,7 @@ class Bullet(pygame.sprite.Sprite):
         self.rect.centerx = x
         self.speedy = -10
 
-    # Metodo que atualiza a posição da navinha
+    # Metodo que atualiza a posição do Pac-Man
     def update(self):
         self.rect.y += self.speedy
         
@@ -256,6 +262,10 @@ def game_screen(screen):
                 # Verifica se apertou alguma tecla.
                 if event.type == pygame.KEYDOWN:
                     # Dependendo da tecla, altera a velocidade.
+                    if event.key == pygame.K_UP:
+                        player.speedy = -8
+                    if event.key == pygame.K_DOWN:
+                        player.speedy = 8
                     if event.key == pygame.K_LEFT:
                         player.speedx = -8
                     if event.key == pygame.K_RIGHT:
@@ -270,6 +280,10 @@ def game_screen(screen):
                 # Verifica se soltou alguma tecla.
                 if event.type == pygame.KEYUP:
                     # Dependendo da tecla, altera a velocidade.
+                    if event.key == pygame.K_UP:
+                        player.speedy = 0
+                    if event.key == pygame.K_DOWN:
+                        player.speedy = 0
                     if event.key == pygame.K_LEFT:
                         player.speedx = 0
                     if event.key == pygame.K_RIGHT:
