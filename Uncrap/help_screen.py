@@ -9,7 +9,7 @@ def help_screen(screen):
     clock = pygame.time.Clock()
 
     # Carrega o fundo da tela inicial
-    background = pygame.image.load(path.join(img_dir, 'help.png')).convert()
+    background = pygame.image.load(path.join(img_dir, 'Help_screen_F.png')).convert()
     background_rect = background.get_rect()
 
     running = True
