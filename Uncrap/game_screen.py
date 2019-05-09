@@ -27,7 +27,7 @@ class Player(pygame.sprite.Sprite):
         
         # Centraliza embaixo da tela.
         self.rect.centerx = WIDTH / 2
-        self.rect.bottom = HEIGHT / 2
+        self.rect.bottom = HEIGHT
         
         # Velocidade da nave
         self.speedx = 0
@@ -42,14 +42,14 @@ class Player(pygame.sprite.Sprite):
         self.rect.y += self.speedy
         
         # Mantem dentro da tela
-        if self.rect.right > WIDTH:
-            self.rect.right = WIDTH
-        if self.rect.left < 0:
-            self.rect.left = 0
-        if self.rect.top < 0:
-            self.rect.top = 0
-        if self.rect.bottom > HEIGHT:
-            self.rect.bottom = HEIGHT
+        if self.rect.right > (120 + WIDTH):
+            self.rect.right = (120 + WIDTH)
+        if self.rect.left < -110:
+            self.rect.left = -110
+        if self.rect.top < -95:
+            self.rect.top = -95
+        if self.rect.bottom > (HEIGHT + 95):
+            self.rect.bottom = (HEIGHT + 95)
                     
 # Classe Mob que representa os fantasmas
 class Mob(pygame.sprite.Sprite):
@@ -68,14 +68,16 @@ class Mob(pygame.sprite.Sprite):
         
         # Detalhes sobre o posicionamento.
         self.rect = self.image.get_rect()
+        self.centerx = 640
+        self.centery = 200
         
         # Sorteia um lugar inicial em x
-        self.rect.x = random.randrange(WIDTH - self.rect.width)
+        self.rect.x = self.centerx
         # Sorteia um lugar inicial em y
-        self.rect.y = random.randrange(HEIGHT - self.rect.height)
+        self.rect.y = self.centery
         # Sorteia uma velocidade inicial
-        self.speedx = random.randrange(-3, 3)
-        self.speedy = random.randrange(2, 9)
+        self.speedx = 3
+        self.speedy = 3
         
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = int(self.rect.width * .85 / 2)
@@ -85,13 +87,21 @@ class Mob(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         
-        # Se o meteoro passar do final da tela, volta para cima
-        if self.rect.top > HEIGHT + 10 or self.rect.left < -25 or self.rect.right > WIDTH + 20:
-            self.rect.x = random.randrange(WIDTH - self.rect.width)
-            self.rect.y = random.randrange(-100, -40)
-            self.speedx = random.randrange(-3, 3)
-            self.speedy = random.randrange(2, 9)
-            
+        # Mantem dentro da tela
+        if self.rect.right > WIDTH:
+            self.rect.right = WIDTH
+            self.speedx *= -1
+        if self.rect.left < 0:
+            self.rect.left = 0
+            self.speedx *= -1
+        if self.rect.top < 0:
+            self.rect.top = 0
+            self.speedy *= -1
+        if self.rect.bottom > HEIGHT:
+            self.rect.bottom = HEIGHT
+            self.speedy *= -1
+        
+       
 # Classe Bullet que representa os tiros
 class Bullet(pygame.sprite.Sprite):
     
@@ -229,7 +239,7 @@ def game_screen(screen):
     bullets = pygame.sprite.Group()
 
     # Cria 8 meteoros e adiciona no grupo meteoros
-    for i in range(8):
+    for i in range(1):
         m = Mob(assets["mob_img"])
         all_sprites.add(m)
         mobs.add(m)
