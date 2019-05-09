@@ -46,10 +46,10 @@ class Player(pygame.sprite.Sprite):
             self.rect.right = WIDTH
         if self.rect.left < 0:
             self.rect.left = 0
-        if self.rect.top > HEIGHT:
-            self.rect.top = HEIGHT
-        if self.rect.bottom < 0:
-            self.rect.bottom = 0
+        if self.rect.top < 0:
+            self.rect.top = 0
+        if self.rect.bottom > HEIGHT:
+            self.rect.bottom = HEIGHT
                     
 # Classe Mob que representa os fantasmas
 class Mob(pygame.sprite.Sprite):
@@ -72,7 +72,7 @@ class Mob(pygame.sprite.Sprite):
         # Sorteia um lugar inicial em x
         self.rect.x = random.randrange(WIDTH - self.rect.width)
         # Sorteia um lugar inicial em y
-        self.rect.y = random.randrange(-100, -40)
+        self.rect.y = random.randrange(HEIGHT - self.rect.height)
         # Sorteia uma velocidade inicial
         self.speedx = random.randrange(-3, 3)
         self.speedy = random.randrange(2, 9)
