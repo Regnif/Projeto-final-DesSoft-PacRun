@@ -2,7 +2,7 @@ import pygame
 import random
 from os import path
 
-from config import img_dir, snd_dir, fnt_dir, WIDTH, HEIGHT, BLACK, YELLOW, RED, FPS, QUIT
+from config import img_dir, snd_dir, fnt_dir, WIDTH, HEIGHT, WHITE, BLACK, YELLOW, RED, FPS, QUIT
 
 # Classe Jogador que representa o Pac
 class Player(pygame.sprite.Sprite):
@@ -17,23 +17,23 @@ class Player(pygame.sprite.Sprite):
         self.image = player_img
         
         # Diminuindo o tamanho da imagem.
-        self.image = pygame.transform.scale(player_img, (50, 38))
+        self.image = pygame.transform.scale(player_img, (300, 250))
         
         # Deixando transparente.
-        self.image.set_colorkey(BLACK)
+        self.image.set_colorkey(WHITE)
         
         # Detalhes sobre o posicionamento.
         self.rect = self.image.get_rect()
         
         # Centraliza embaixo da tela.
         self.rect.centerx = WIDTH / 2
-        self.rect.bottom = HEIGHT - 10
+        self.rect.bottom = HEIGHT / 2
         
         # Velocidade da nave
         self.speedx = 0
         
         # Melhora a colisão estabelecendo um raio de um circulo
-        self.radius = 25
+        self.radius = 35
     
     # Metodo que atualiza a posição da navinha
     def update(self):
