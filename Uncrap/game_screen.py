@@ -51,7 +51,7 @@ class Player(pygame.sprite.Sprite):
         if self.rect.bottom < 0:
             self.rect.bottom = 0
                     
-# Classe Mob que representa os meteoros
+# Classe Mob que representa os fantasmas
 class Mob(pygame.sprite.Sprite):
     
     # Construtor da classe.
@@ -61,7 +61,7 @@ class Mob(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         
         # Diminuindo o tamanho da imagem.
-        self.image = pygame.transform.scale(mob_img, (50, 38))
+        self.image = pygame.transform.scale(mob_img, (100, 150))
         
         # Deixando transparente.
         self.image.set_colorkey(BLACK)
