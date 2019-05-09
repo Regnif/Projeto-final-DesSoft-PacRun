@@ -26,8 +26,9 @@ def help_screen(screen):
                 running = False
 
             if event.type == pygame.KEYUP:
-                state = INIT
-                running = False
+                if event.key == pygame.K_b:
+                    state = INIT
+                    running = False
             
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(BLACK)

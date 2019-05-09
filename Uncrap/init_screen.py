@@ -29,7 +29,7 @@ def init_screen(screen):
                 if event.key == pygame.K_h:
                     state = HELP
                     running = False
-                else:
+                elif event.key == pygame.K_p:
                     state = GAME
                     running = False
             
