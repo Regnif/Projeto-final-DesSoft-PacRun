@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         
-        if self.rect.x % 80 == 0 or self.rect.y % 80 == 0 or self.rect.x == 0 or self.rect.y == 0 or self.rect.x == 1200 or self.rect.y == 640:
+        if self.rect.x % 8 == 0 or self.rect.y % 8 == 0 or self.rect.x == 0 or self.rect.y == 0 or self.rect.x == 1200 or self.rect.y == 640:
             
             if self.dir_prox == SOBE:
                 self.speedx = 0
@@ -75,7 +75,7 @@ class Player(pygame.sprite.Sprite):
         if self.rect.left < 0:
             self.rect.left = 0
             self.dir_prox = PARADO
-        if self.rect.top <= 0:
+        if self.rect.top < 0:
             self.rect.top = 0
             self.dir_prox = PARADO
         if (self.rect.y + 80) > HEIGHT:
@@ -181,6 +181,12 @@ class Explosion(pygame.sprite.Sprite):
                 self.image = self.explosion_anim[self.frame]
                 self.rect = self.image.get_rect()
                 self.rect.center = center
+                
+class Wall(pygame.sprite.Sprite):
+    def __init__(self, wall_img):
+        pygame.sprite.Sprite.__init__(self)
+        
+
 
 # Carrega todos os assets uma vez só.
 def load_assets(img_dir, snd_dir, fnt_dir):
