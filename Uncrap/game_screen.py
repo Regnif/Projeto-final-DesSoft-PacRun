@@ -4,6 +4,12 @@ from os import path
 
 from config import img_dir, snd_dir, fnt_dir, WIDTH, HEIGHT, WHITE, BLACK, YELLOW, RED, FPS, QUIT
 
+SOBE = 0
+DIREITA = 1
+DESCE = 2
+ESQUERDA = 3
+PARADO = 4
+
 # Classe Jogador que representa o Pac
 class Player(pygame.sprite.Sprite):
     
@@ -17,39 +23,64 @@ class Player(pygame.sprite.Sprite):
         self.image = player_img
         
         # Diminuindo o tamanho da imagem.
-        self.image = pygame.transform.scale(player_img, (300, 250))
+        self.image = pygame.transform.scale(player_img, (80, 80))
         
         # Deixando transparente.
-        self.image.set_colorkey(WHITE)
+        #self.image.set_colorkey(WHITE)
         
         # Detalhes sobre o posicionamento.
         self.rect = self.image.get_rect()
         
         # Centraliza embaixo da tela.
-        self.rect.centerx = WIDTH / 2
-        self.rect.bottom = HEIGHT
+        self.rect.left = 1280
+        self.rect.top = 720
         
         # Velocidade da nave
         self.speedx = 0
         self.speedy = 0
         
+        self.dir_prox = SOBE
+        
         # Melhora a colisão estabelecendo um raio de um circulo
-        self.radius = 35
+        self.radius = 40
     
     # Metodo que atualiza a posição da navinha
     def update(self):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         
+        if self.rect.x % 80 == 0 or self.rect.y % 80 == 0 or self.rect.x == 0 or self.rect.y == 0 or self.rect.x == 1200 or self.rect.y == 640:
+            
+            if self.dir_prox == SOBE:
+                self.speedx = 0
+                self.speedy = -8
+            elif self.dir_prox == DIREITA:
+                self.speedx = 8
+                self.speedy = 0
+            elif self.dir_prox == DESCE:
+                self.speedx = 0
+                self.speedy = 8
+            elif self.dir_prox == ESQUERDA:
+                self.speedx = -8
+                self.speedy = 0
+        if self.dir_prox == PARADO:
+            self.speedx = 0
+            self.speedy = 0
+        print("Minhas coordenadas são {0} e {1}".format(self.rect.x, self.rect.y), "Meu Estado é {}".format(self.dir_prox))
         # Mantem dentro da tela
-        if self.rect.right > (120 + WIDTH):
-            self.rect.right = (120 + WIDTH)
-        if self.rect.left < -110:
-            self.rect.left = -110
-        if self.rect.top < -95:
-            self.rect.top = -95
-        if self.rect.bottom > (HEIGHT + 95):
-            self.rect.bottom = (HEIGHT + 95)
+        
+        if (self.rect.x + 80) > WIDTH:
+            self.rect.x = (WIDTH - 80)
+            self.dir_prox = PARADO
+        if self.rect.left < 0:
+            self.rect.left = 0
+            self.dir_prox = PARADO
+        if self.rect.top <= 0:
+            self.rect.top = 0
+            self.dir_prox = PARADO
+        if (self.rect.y + 80) > HEIGHT:
+            self.rect.y = (HEIGHT - 80)
+            self.dir_prox = PARADO
                     
 # Classe Mob que representa os fantasmas
 class Mob(pygame.sprite.Sprite):
@@ -100,39 +131,7 @@ class Mob(pygame.sprite.Sprite):
         if self.rect.bottom > HEIGHT:
             self.rect.bottom = HEIGHT
             self.speedy *= -1
-        
-       
-# Classe Bullet que representa os tiros
-class Bullet(pygame.sprite.Sprite):
-    
-    # Construtor da classe.
-    def __init__(self, x, y, bullet_img):
-        
-        # Construtor da classe pai (Sprite).
-        pygame.sprite.Sprite.__init__(self)
-        
-        # Carregando a imagem de fundo.
-        self.image = bullet_img
-        
-        # Deixando transparente.
-        self.image.set_colorkey(BLACK)
-        
-        # Detalhes sobre o posicionamento.
-        self.rect = self.image.get_rect()
-        
-        # Coloca no lugar inicial definido em x, y do constutor
-        self.rect.bottom = y
-        self.rect.centerx = x
-        self.speedy = -10
-
-    # Metodo que atualiza a posição do Pac-Man
-    def update(self):
-        self.rect.y += self.speedy
-        
-        # Se o tiro passar do inicio da tela, morre.
-        if self.rect.bottom < 0:
-            self.kill()
-
+               
 # Classe que representa uma explosão de meteoro
 class Explosion(pygame.sprite.Sprite):
 
@@ -222,7 +221,7 @@ def game_screen(screen):
     destroy_sound = assets["destroy_sound"]
     pew_sound = assets["pew_sound"]
 
-    # Cria uma nave. O construtor será chamado automaticamente.
+    # Cria um jogador. O construtor será chamado automaticamente.
     player = Player(assets["player_img"])
 
     # Carrega a fonte para desenhar o score.
@@ -234,9 +233,6 @@ def game_screen(screen):
 
     # Cria um grupo só dos meteoros
     mobs = pygame.sprite.Group()
-
-    # Cria um grupo para tiros
-    bullets = pygame.sprite.Group()
 
     # Cria 8 meteoros e adiciona no grupo meteoros
     for i in range(1):
@@ -273,53 +269,19 @@ def game_screen(screen):
                 if event.type == pygame.KEYDOWN:
                     # Dependendo da tecla, altera a velocidade.
                     if event.key == pygame.K_UP:
-                        player.speedy = -8
+                        player.dir_prox = SOBE
                     if event.key == pygame.K_DOWN:
-                        player.speedy = 8
+                        player.dir_prox = DESCE
                     if event.key == pygame.K_LEFT:
-                        player.speedx = -8
+                        player.dir_prox = ESQUERDA
                     if event.key == pygame.K_RIGHT:
-                        player.speedx = 8
-                    # Se for um espaço atira!
-                    if event.key == pygame.K_SPACE:
-                        bullet = Bullet(player.rect.centerx, player.rect.top, assets["bullet_img"])
-                        all_sprites.add(bullet)
-                        bullets.add(bullet)
-                        pew_sound.play()
-                        
-                # Verifica se soltou alguma tecla.
-                if event.type == pygame.KEYUP:
-                    # Dependendo da tecla, altera a velocidade.
-                    if event.key == pygame.K_UP:
-                        player.speedy = 0
-                    if event.key == pygame.K_DOWN:
-                        player.speedy = 0
-                    if event.key == pygame.K_LEFT:
-                        player.speedx = 0
-                    if event.key == pygame.K_RIGHT:
-                        player.speedx = 0
-                    
+                        player.dir_prox = DIREITA
+                                            
         # Depois de processar os eventos.
         # Atualiza a acao de cada sprite.
         all_sprites.update()
         
-        if state == PLAYING:
-            # Verifica se houve colisão entre tiro e meteoro
-            hits = pygame.sprite.groupcollide(mobs, bullets, True, True)
-            for hit in hits: # Pode haver mais de um
-                # O meteoro e destruido e precisa ser recriado
-                destroy_sound.play()
-                m = Mob(assets["mob_img"]) 
-                all_sprites.add(m)
-                mobs.add(m)
-
-                # No lugar do meteoro antigo, adicionar uma explosão.
-                explosao = Explosion(hit.rect.center, assets["explosion_anim"])
-                all_sprites.add(explosao)
-
-                # Ganhou pontos!
-                score += 100
-            
+        if state == PLAYING:            
             # Verifica se houve colisão entre nave e meteoro
             hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)
             if hits:
