@@ -1,8 +1,10 @@
 ﻿# Projeto-final-DesSoft-PacRun
+
 O repositório destinado ao nosso projeto de Design de Software
 
 Insper – Instituto de Ensino e Pesquisa 
 Desenvolvimento de software
+
 1° Semestre de Engenharia – Turma B
 Projeto final 
 
@@ -14,8 +16,8 @@ Além disso, o número de inimigos e a dificuldade aumentam à medida que o joga
 
 Cronograma:
 
-10 – Sprites, Cenário, Game Over e Dinâmica de Jogo 
-17 – Pontuação e modo infinito	
-24 – Incrementando dificuldades no jogo
-31 – Entrega do trabalho
+- 10 – Sprites, Cenário, Game Over e Dinâmica de Jogo 
+- 17 – Pontuação e modo infinito	
+- 24 – Incrementando dificuldades no jogo
+- 31 – Entrega do trabalho
 
