@@ -181,12 +181,6 @@ class Explosion(pygame.sprite.Sprite):
                 self.image = self.explosion_anim[self.frame]
                 self.rect = self.image.get_rect()
                 self.rect.center = center
-                
-class Wall(pygame.sprite.Sprite):
-    def __init__(self, wall_img):
-        pygame.sprite.Sprite.__init__(self)
-        
-
 
 # Carrega todos os assets uma vez só.
 def load_assets(img_dir, snd_dir, fnt_dir):
