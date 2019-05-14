@@ -26,7 +26,7 @@ class Player(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(player_img, (80, 80))
         
         # Deixando transparente.
-        #self.image.set_colorkey(WHITE)
+        self.image.set_colorkey(WHITE)
         
         # Detalhes sobre o posicionamento.
         self.rect = self.image.get_rect()
