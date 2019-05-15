@@ -137,18 +137,9 @@ class Mob(pygame.sprite.Sprite):
 class Wall (pygame.sprite.Sprite):
     def __init__(self, ground_img, dirt_img):
         
-        # Construtor da classe pai (Sprite).
-        pygame.sprite.Sprite.__init__(self)
         
-        self.image = pygame.transform.scale(mob_img, (100, 150))
-        
-        # Deixando transparente.
-        self.image.set_colorkey(BLACK)
-        
-        # Melhora a colisão estabelecendo um raio de um circulo
-        self.radius = int(self.rect.width * .85 / 2)
     
-        display = pygame.Surface((300,200)) # used as the surface for rendering, which is scaled
+        display = pygame.Surface((720,1280)) # used as the surface for rendering, which is scaled
     
         game_map = [['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
                     ['1','0','0','0','0','1','0','0','0','0','0','0','0','1','0','0','0','0','1'],
@@ -233,8 +224,8 @@ class Explosion(pygame.sprite.Sprite):
 def load_assets(img_dir, snd_dir, fnt_dir):
     assets = {}
     assets["player_img"] = pygame.image.load(path.join(img_dir, "Pac.png")).convert()
-    ground_img = pygame.image.load(path.join(img_dir, "ground.png")).convert()
-    dirt_img = pygame.image.load(path.join(img_dir, "dirt.png")).convert()
+    assets["ground_img"] = pygame.image.load(path.join(img_dir, "ground.png")).convert()
+    assets["dirt_img"] = pygame.image.load(path.join(img_dir, "dirt.png")).convert()
     assets["mob_img"] = pygame.image.load(path.join(img_dir, "meteorBrown_med1.png")).convert()
     assets["background"] = pygame.image.load(path.join(img_dir, 'Plano_de_fundo.png')).convert()
     assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl3.wav'))
@@ -281,17 +272,15 @@ def game_screen(screen):
 
     # Cria um grupo só dos meteoros
     mobs = pygame.sprite.Group()
-    wall = pygame.sprite.Group()
-    for i in range(1):
-        w = Wall(assets['mob_img', 'dirt_img'])
-        all_sprites.add(w)
-        wall.add(w)
+    
+    
 
     # Cria 8 meteoros e adiciona no grupo meteoros
     for i in range(1):
         m = Mob(assets["mob_img"])
         all_sprites.add(m)
         mobs.add(m)
+       
 
     # Loop principal.
     pygame.mixer.music.play(loops=-1)

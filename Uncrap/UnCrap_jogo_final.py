@@ -20,7 +20,7 @@ pygame.mixer.init()
 # Tamanho da tela.
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 
-# Nome do jogo
+# Nome do jogop
 pygame.display.set_caption("UnCrap")
 
 # Comando para evitar travamentos.
