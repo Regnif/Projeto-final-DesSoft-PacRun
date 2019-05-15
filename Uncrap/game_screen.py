@@ -137,9 +137,13 @@ class Mob(pygame.sprite.Sprite):
 class Wall (pygame.sprite.Sprite):
     def __init__(self, ground_img, dirt_img):
         
+        pygame.sprite.Sprite.__init__(self)
         
-    
-        display = pygame.Surface((720,1280)) # used as the surface for rendering, which is scaled
+        self.image = pygame.Surface((720,1280)) # used as the surface for rendering, which is scaled
+        
+        self.rect = self.image.get_rect()
+        self.centerx = 640
+        self.centery = 360
     
         game_map = [['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
                     ['1','0','0','0','0','1','0','0','0','0','0','0','0','1','0','0','0','0','1'],
@@ -154,21 +158,20 @@ class Wall (pygame.sprite.Sprite):
                     ['1','0','1','1','0','1','0','0','0','1','1','1','1','1','0','1','1','0','1'],
                     ['1','0','0','0','0','0','0','1','0','0','0','0','0','0','0','0','0','0','1'],
                     ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1']]
-    
         
-        while True:
-            tile_rects = []
-            y = 0
-            for layer in game_map:
-                x = 0
-                for tile in layer:
-                    if tile == '0':
-                        display.blit(ground_img,(x*16,y*16))
-                    if tile == '1':
-                        display.blit(dirt_img,(x*16,y*16))
-                    x += 1
+        y = 0
+        for layer in game_map:
+            x = 0
+            for tile in layer:
+                if tile == '0':
+                    self.image.blit(ground_img,(x*16,y*16))
+                if tile == '1':
+                    self.image.blit(dirt_img,(x*16,y*16))
+                x += 1
             y += 1
             
+        def update(self):
+            return None
             
 # Classe que representa uma explosão de meteoro
 class Explosion(pygame.sprite.Sprite):
@@ -260,7 +263,7 @@ def game_screen(screen):
     
     # Cria um jogador. O construtor será chamado automaticamente.
     player = Player(assets["player_img"])
-   
+    wall = Wall(assets["ground_img"],assets["dirt_img"])
 
     # Carrega a fonte para desenhar o score.
     score_font = assets["score_font"]
@@ -268,13 +271,11 @@ def game_screen(screen):
     # Cria um grupo de todos os sprites e adiciona a nave.
     all_sprites = pygame.sprite.Group()
     all_sprites.add(player)
-  
+    all_sprites.add(wall)
 
     # Cria um grupo só dos meteoros
     mobs = pygame.sprite.Group()
     
-    
-
     # Cria 8 meteoros e adiciona no grupo meteoros
     for i in range(1):
         m = Mob(assets["mob_img"])
