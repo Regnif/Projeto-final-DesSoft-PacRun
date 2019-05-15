@@ -141,9 +141,9 @@ class Wall (pygame.sprite.Sprite):
         
         self.image = pygame.Surface((720,1280)) # used as the surface for rendering, which is scaled
         
+        self.image.set_colorkey(BLACK)
+        
         self.rect = self.image.get_rect()
-        self.centerx = 640
-        self.centery = 360
     
         game_map = [['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
                     ['1','0','0','0','0','1','0','0','0','0','0','0','0','1','0','0','0','0','1'],
@@ -169,9 +169,6 @@ class Wall (pygame.sprite.Sprite):
                     self.image.blit(dirt_img,(x*16,y*16))
                 x += 1
             y += 1
-            
-        def update(self):
-            return None
             
 # Classe que representa uma explosão de meteoro
 class Explosion(pygame.sprite.Sprite):
