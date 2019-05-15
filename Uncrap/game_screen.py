@@ -113,6 +113,8 @@ class Mob(pygame.sprite.Sprite):
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = int(self.rect.width * .85 / 2)
         
+        
+    
     # Metodo que atualiza a posição do meteoro
     def update(self):
         self.rect.x += self.speedx
@@ -133,32 +135,49 @@ class Mob(pygame.sprite.Sprite):
             self.speedy *= -1
                
 class Wall (pygame.sprite.Sprite):
-    
-    # Construtor da classe.
-    def __init__(self, mob_img):
+    def __init__(self, ground_img, dirt_img):
         
         # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
         
-        # Diminuindo o tamanho da imagem.
-        self.image = pygame.transform.scale(mob_img, (80, 80))
+        self.image = pygame.transform.scale(mob_img, (100, 150))
         
         # Deixando transparente.
         self.image.set_colorkey(BLACK)
         
-        # Detalhes sobre o posicionamento.
-        self.rect = self.image.get_rect()
-        self.centerx = 40
-        self.centery = 40
+        # Melhora a colisão estabelecendo um raio de um circulo
+        self.radius = int(self.rect.width * .85 / 2)
+    
+        display = pygame.Surface((300,200)) # used as the surface for rendering, which is scaled
+    
+        game_map = [['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                    ['1','0','0','0','0','1','0','0','0','0','0','0','0','1','0','0','0','0','1'],
+                    ['1','0','1','1','0','1','0','1','0','1','0','1','0','0','0','1','1','0','1'],
+                    ['1','0','0','0','0','0','0','1','0','1','0','1','1','0','1','1','0','0','1'],
+                    ['1','0','1','1','0','1','1','1','0','0','0','0','1','0','0','0','0','0','1'],
+                    ['1','0','0','0','0','0','0','1','1','1','1','0','1','1','0','0','1','1','1'],
+                    ['1','0','1','1','0','1','0','0','0','0','1','0','0','1','1','0','0','0','1'],
+                    ['1','0','0','1','0','1','1','0','1','1','1','0','0','0','0','0','1','0','1'],
+                    ['1','1','0','1','0','0','0','0','0','0','0','0','1','1','1','0','1','0','1'],
+                    ['1','0','0','1','0','1','1','0','1','1','0','0','0','0','0','0','0','0','1'],
+                    ['1','0','1','1','0','1','0','0','0','1','1','1','1','1','0','1','1','0','1'],
+                    ['1','0','0','0','0','0','0','1','0','0','0','0','0','0','0','0','0','0','1'],
+                    ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1']]
+    
         
-        # Sorteia um lugar inicial em x
-        self.rect.x = self.centerx
-        # Sorteia um lugar inicial em y
-        self.rect.y = self.centery
- 
-     # Melhora a colisão estabelecendo um raio de um circulo
-        self.radius = int(self.rect.width * 40)
-        
+        while True:
+            tile_rects = []
+            y = 0
+            for layer in game_map:
+                x = 0
+                for tile in layer:
+                    if tile == '0':
+                        display.blit(ground_img,(x*16,y*16))
+                    if tile == '1':
+                        display.blit(dirt_img,(x*16,y*16))
+                    x += 1
+            y += 1
+            
             
 # Classe que representa uma explosão de meteoro
 class Explosion(pygame.sprite.Sprite):
@@ -214,12 +233,12 @@ class Explosion(pygame.sprite.Sprite):
 def load_assets(img_dir, snd_dir, fnt_dir):
     assets = {}
     assets["player_img"] = pygame.image.load(path.join(img_dir, "Pac.png")).convert()
+    ground_img = pygame.image.load(path.join(img_dir, "ground.png")).convert()
+    dirt_img = pygame.image.load(path.join(img_dir, "dirt.png")).convert()
     assets["mob_img"] = pygame.image.load(path.join(img_dir, "meteorBrown_med1.png")).convert()
-    assets["bullet_img"] = pygame.image.load(path.join(img_dir, "laserRed16.png")).convert()
     assets["background"] = pygame.image.load(path.join(img_dir, 'Plano_de_fundo.png')).convert()
     assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl3.wav'))
     assets["destroy_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl6.wav'))
-    assets["pew_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'pew.wav'))
     explosion_anim = []
     for i in range(9):
         filename = 'regularExplosion0{}.png'.format(i)
@@ -247,9 +266,7 @@ def game_screen(screen):
     pygame.mixer.music.load(path.join(snd_dir, 'tgfcoder-FrozenJam-SeamlessLoop.ogg'))
     pygame.mixer.music.set_volume(0.4)
     boom_sound = assets["boom_sound"]
-    destroy_sound = assets["destroy_sound"]
-    pew_sound = assets["pew_sound"]
-
+    
     # Cria um jogador. O construtor será chamado automaticamente.
     player = Player(assets["player_img"])
    
@@ -266,7 +283,7 @@ def game_screen(screen):
     mobs = pygame.sprite.Group()
     wall = pygame.sprite.Group()
     for i in range(1):
-        w = Wall(assets["mob_img"])
+        w = Wall(assets['mob_img', 'dirt_img'])
         all_sprites.add(w)
         wall.add(w)
 
@@ -320,7 +337,7 @@ def game_screen(screen):
         if state == PLAYING:            
             # Verifica se houve colisão entre nave e meteoro
             hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)
-            hits2 = pygame.sprite.spritecollide(player, wall, False, pygame.sprite.collide_circle)
+            #hits2 = pygame.sprite.spritecollide(player, wall, False, pygame.sprite.collide_circle)
             if hits:
                 # Toca o som da colisão
                 boom_sound.play()
