@@ -239,7 +239,7 @@ def game_screen(screen):
     clock = pygame.time.Clock()
 
     # Carrega o fundo do jogo
-    background_mask = pygame.image.load(path.join(img_dir, 'mascara_mapa.png')).convert()
+   
     background = assets["background"]
     background_rect = background.get_rect()
 
