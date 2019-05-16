@@ -220,8 +220,8 @@ class Explosion(pygame.sprite.Sprite):
 def load_assets(img_dir, snd_dir, fnt_dir):
     assets = {}
     assets["player_img"] = pygame.image.load(path.join(img_dir, "Pac.png")).convert()
-    assets["ground_img"] = pygame.image.load(path.join(img_dir, "ground.png")).convert()
-    assets["dirt_img"] = pygame.image.load(path.join(img_dir, "dirt.png")).convert()
+    assets["ground_img"] = pygame.image.load(path.join(img_dir, "ground2.png")).convert()
+    assets["dirt_img"] = pygame.image.load(path.join(img_dir, "dirt2.png")).convert()
     assets["mob_img"] = pygame.image.load(path.join(img_dir, "meteorBrown_med1.png")).convert()
     assets["background"] = pygame.image.load(path.join(img_dir, 'Plano_de_fundo.png')).convert()
     assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl3.wav'))
@@ -255,16 +255,16 @@ def game_screen(screen):
     boom_sound = assets["boom_sound"]
     
     # Cria um jogador. O construtor será chamado automaticamente.
-    player = Player(assets["player_img"])
     wall = Wall(assets["ground_img"],assets["dirt_img"])
+    player = Player(assets["player_img"])
 
     # Carrega a fonte para desenhar o score.
     score_font = assets["score_font"]
 
     # Cria um grupo de todos os sprites e adiciona a nave.
     all_sprites = pygame.sprite.Group()
-    all_sprites.add(player)
     all_sprites.add(wall)
+    all_sprites.add(player)
 
     # Cria um grupo só dos meteoros
     mobs = pygame.sprite.Group()
