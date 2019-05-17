@@ -32,8 +32,11 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         
         # Centraliza embaixo da tela.
-        self.rect.left = 1280
-        self.rect.top = 720
+        self.rect.x = 80
+        self.rect.y = 80
+        
+        self.previous_pos_x = self.rect.x
+        self.previous_pos_y = self.rect.y
         
         # Velocidade da nave
         self.speedx = 0
@@ -46,24 +49,27 @@ class Player(pygame.sprite.Sprite):
     
     # Metodo que atualiza a posição da navinha
     def update(self):
+        self.previous_pos_x = self.rect.x
+        self.previous_pos_y = self.rect.y
+        
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         
-        if self.rect.x % 80 == 0 or self.rect.y % 80 == 0 or self.rect.x == 0 or self.rect.y == 0 or self.rect.x == 1200 or self.rect.y == 640:
+        #if self.rect.x % 80 == 0 or self.rect.y % 80 == 0 or self.rect.x == 0 or self.rect.y == 0 or self.rect.x == 1200 or self.rect.y == 640:
             
-            if self.dir_prox == SOBE:
-                self.speedx = 0
-                self.speedy = -8
-            elif self.dir_prox == DIREITA:
-                self.speedx = 8
-                self.speedy = 0
-            elif self.dir_prox == DESCE:
-                self.speedx = 0
-                self.speedy = 8
-            elif self.dir_prox == ESQUERDA:
-                self.speedx = -8
-                self.speedy = 0
-        if self.dir_prox == PARADO:
+        if self.dir_prox == SOBE:
+            self.speedx = 0
+            self.speedy = -8
+        elif self.dir_prox == DIREITA:
+            self.speedx = 8
+            self.speedy = 0
+        elif self.dir_prox == DESCE:
+            self.speedx = 0
+            self.speedy = 8
+        elif self.dir_prox == ESQUERDA:
+            self.speedx = -8
+            self.speedy = 0
+        elif self.dir_prox == PARADO:
             self.speedx = 0
             self.speedy = 0
         print("Minhas coordenadas são {0} e {1}".format(self.rect.x, self.rect.y), "Meu Estado é {}".format(self.dir_prox))
@@ -81,6 +87,11 @@ class Player(pygame.sprite.Sprite):
         if (self.rect.y + 80) > HEIGHT:
             self.rect.y = (HEIGHT - 80)
             self.dir_prox = PARADO
+
+    def rollback(self):
+        self.rect.x = self.previous_pos_x
+        self.rect.y = self.previous_pos_y
+        self.dir_prox = PARADO
                     
 # Classe Mob que representa os fantasmas
 class Mob(pygame.sprite.Sprite):
@@ -133,38 +144,51 @@ class Mob(pygame.sprite.Sprite):
         if self.rect.bottom > HEIGHT:
             self.rect.bottom = HEIGHT
             self.speedy *= -1
-               
-class Wall (pygame.sprite.Sprite):
-    def __init__(self, ground_img, dirt_img):
+
+class Wall(pygame.sprite.Sprite):
+    
+    # Construtor da classe.
+    def __init__(self, x, y):
         
+        # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
         
-        self.image = pygame.Surface((1280,720)) # used as the surface for rendering, which is scaled
-        
-        self.image.set_colorkey(BLACK)
-        
+        self.image = pygame.Surface((80, 80))
         self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
     
-        game_map = [['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
-                    ['1','0','0','0','0','1','0','0','0','0','0','0','0','1','0','1'],
-                    ['1','0','1','1','0','1','0','1','0','1','0','1','0','0','0','1'],
-                    ['1','0','0','0','0','0','0','1','0','1','0','1','1','0','1','1'],
-                    ['1','0','1','1','0','1','1','1','0','0','0','0','1','0','0','1'],
-                    ['1','0','0','0','0','0','0','1','1','1','1','0','1','1','0','1'],
-                    ['1','0','1','1','0','1','0','0','0','0','1','0','0','1','0','1'],
-                    ['1','0','0','0','0','1','1','0','1','1','0','0','0','0','0','1'],
-                    ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1']]
-        
-        y = 0
-        for layer in game_map:
-            x = 0
-            for tile in layer:
-                if tile == '0':
-                    self.image.blit(ground_img,(x*80,y*80))
-                if tile == '1':
-                    self.image.blit(dirt_img,(x*80,y*80))
-                x += 1
-            y += 1
+
+def make_map(ground_img, dirt_img):
+    map_image = pygame.Surface((1280,720)) # used as the surface for rendering, which is scaled        
+    map_image.set_colorkey(BLACK)
+
+    game_map = [['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','0','0','0','0','1','0','0','0','0','0','0','0','1','0','1'],
+                ['1','0','1','1','0','1','0','1','0','1','0','1','0','0','0','1'],
+                ['1','0','0','0','0','0','0','1','0','1','0','1','1','0','1','1'],
+                ['1','0','1','1','0','1','1','1','0','0','0','0','1','0','0','1'],
+                ['1','0','0','0','0','0','0','1','1','1','1','0','1','1','0','1'],
+                ['1','0','1','1','0','1','0','0','0','0','1','0','0','1','0','1'],
+                ['1','0','0','0','0','1','1','0','1','0','0','0','0','0','0','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1']]
+
+    # Pinta o background.    
+    for y, layer in enumerate(game_map):
+        for x, tile in enumerate(layer):
+            if tile == '0':
+                map_image.blit(ground_img,(x*80,y*80))
+            if tile == '1':
+                map_image.blit(dirt_img,(x*80,y*80))
+                
+    # Monta as paredes para colisão.
+    wall_group = pygame.sprite.Group()
+    for y, layer in enumerate(game_map):
+        for x, tile in enumerate(layer):
+            if tile == '1':
+                wall_group.add(Wall(x*80,y*80))
+    
+    return map_image, wall_group
             
 # Classe que representa uma explosão de meteoro
 class Explosion(pygame.sprite.Sprite):
@@ -246,16 +270,13 @@ def game_screen(screen):
 
     # Carrega o fundo do jogo
    
-    background = assets["background"]
-    background_rect = background.get_rect()
-
     # Carrega os sons do jogo
     pygame.mixer.music.load(path.join(snd_dir, 'tgfcoder-FrozenJam-SeamlessLoop.ogg'))
     pygame.mixer.music.set_volume(0.4)
     boom_sound = assets["boom_sound"]
     
     # Cria um jogador. O construtor será chamado automaticamente.
-    wall = Wall(assets["ground_img"],assets["dirt_img"])
+    wall, wall_group = make_map(assets["ground_img"],assets["dirt_img"])
     player = Player(assets["player_img"])
 
     # Carrega a fonte para desenhar o score.
@@ -263,7 +284,6 @@ def game_screen(screen):
 
     # Cria um grupo de todos os sprites e adiciona a nave.
     all_sprites = pygame.sprite.Group()
-    all_sprites.add(wall)
     all_sprites.add(player)
 
     # Cria um grupo só dos meteoros
@@ -317,7 +337,7 @@ def game_screen(screen):
         # Atualiza a acao de cada sprite.
         all_sprites.update()
         
-        if state == PLAYING:            
+        if state == PLAYING:
             # Verifica se houve colisão entre nave e meteoro
             hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)
             #hits2 = pygame.sprite.spritecollide(player, wall, False, pygame.sprite.collide_circle)
@@ -332,6 +352,11 @@ def game_screen(screen):
                 explosion_tick = pygame.time.get_ticks()
                 explosion_duration = explosao.frame_ticks * len(explosao.explosion_anim) + 400
            
+            # Verifica se houve colisão entre nave e paredes
+            hits = pygame.sprite.spritecollide(player, wall_group, False, pygame.sprite.collide_rect)
+            if hits:
+                player.rollback()
+           
         elif state == EXPLODING:
             now = pygame.time.get_ticks()
             if now - explosion_tick > explosion_duration:
@@ -344,7 +369,7 @@ def game_screen(screen):
 
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(BLACK)
-        screen.blit(background, background_rect)
+        screen.blit(wall, (0,0))
         all_sprites.draw(screen)
 
         # Desenha o score
