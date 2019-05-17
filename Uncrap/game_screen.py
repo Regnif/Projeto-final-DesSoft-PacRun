@@ -107,7 +107,7 @@ class Mob(pygame.sprite.Sprite):
         self.image = pygame.transform.scale(mob_img, (80, 80))
         
         # Deixando transparente.
-        self.image.set_colorkey(BLACK)
+        self.image.set_colorkey(WHITE)
         
         # Detalhes sobre o posicionamento.
         self.rect = self.image.get_rect()
@@ -331,7 +331,7 @@ def game_screen(screen):
                         player.dir_prox = ESQUERDA
                     if event.key == pygame.K_RIGHT:
                         player.dir_prox = DIREITA
-                        
+                """        
                 if event.type == pygame.KEYUP:
                     # Dependendo da tecla, altera a velocidade.
                     if event.key == pygame.K_LEFT:
@@ -342,7 +342,7 @@ def game_screen(screen):
                         player.dir_prox = PARADO
                     if event.key == pygame.K_DOWN:
                         player.dir_prox = PARADO
-                    
+                    """
         # Depois de processar os eventos.
         # Atualiza a acao de cada sprite.
         all_sprites.update()
