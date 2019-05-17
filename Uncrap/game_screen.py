@@ -56,24 +56,24 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         
-        #if self.rect.x % 80 == 0 or self.rect.y % 80 == 0 or self.rect.x == 0 or self.rect.y == 0 or self.rect.x == 1200 or self.rect.y == 640:
+        if self.rect.x % 80 == 0 or self.rect.y % 80 == 0: #or self.rect.x == 0 or self.rect.y == 0 or self.rect.x == 1200 or self.rect.y == 640:
             
-        if self.dir_prox == SOBE:
+            if self.dir_prox == SOBE:
+                self.speedx = 0
+                self.speedy = -8
+            elif self.dir_prox == DIREITA:
+                self.speedx = 8
+                self.speedy = 0
+            elif self.dir_prox == DESCE:
+                self.speedx = 0
+                self.speedy = 8
+            elif self.dir_prox == ESQUERDA:
+                self.speedx = -8
+                self.speedy = 0
+        if self.dir_prox == PARADO:
             self.speedx = 0
-            self.speedy = -8
-        elif self.dir_prox == DIREITA:
-            self.speedx = 8
             self.speedy = 0
-        elif self.dir_prox == DESCE:
-            self.speedx = 0
-            self.speedy = 8
-        elif self.dir_prox == ESQUERDA:
-            self.speedx = -8
-            self.speedy = 0
-        elif self.dir_prox == PARADO:
-            self.speedx = 0
-            self.speedy = 0
-        print("Minhas coordenadas são {0} e {1}".format(self.rect.x, self.rect.y), "Meu Estado é {}".format(self.dir_prox))
+        #print("Minhas coordenadas são {0} e {1}".format(self.rect.x, self.rect.y), "Meu Estado é {}".format(self.dir_prox))
         # Mantem dentro da tela
         
         if (self.rect.x + 80) > WIDTH:
@@ -245,7 +245,7 @@ def load_assets(img_dir, snd_dir, fnt_dir):
     assets["player_img"] = pygame.image.load(path.join(img_dir, "Pac.png")).convert()
     assets["ground_img"] = pygame.image.load(path.join(img_dir, "ground2.png")).convert()
     assets["dirt_img"] = pygame.image.load(path.join(img_dir, "dirt2.png")).convert()
-    assets["mob_img"] = pygame.image.load(path.join(img_dir, "meteorBrown_med1.png")).convert()
+    assets["mob_img"] = pygame.image.load(path.join(img_dir, "ghost.png")).convert()
     assets["background"] = pygame.image.load(path.join(img_dir, 'Plano_de_fundo.png')).convert()
     assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl3.wav'))
     assets["destroy_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl6.wav'))
