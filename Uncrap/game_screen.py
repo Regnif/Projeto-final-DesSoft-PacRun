@@ -9,6 +9,7 @@ DIREITA = 1
 DESCE = 2
 ESQUERDA = 3
 PARADO = 4
+SALTANDO = 5
 
 # Classe Jogador que representa o Pac
 class Player(pygame.sprite.Sprite):
@@ -103,7 +104,7 @@ class Mob(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         
         # Diminuindo o tamanho da imagem.
-        self.image = pygame.transform.scale(mob_img, (100, 150))
+        self.image = pygame.transform.scale(mob_img, (80, 80))
         
         # Deixando transparente.
         self.image.set_colorkey(BLACK)
@@ -124,8 +125,6 @@ class Mob(pygame.sprite.Sprite):
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = int(self.rect.width * .85 / 2)
         
-        
-    
     # Metodo que atualiza a posição do meteoro
     def update(self):
         self.rect.x += self.speedx
