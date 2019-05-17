@@ -123,7 +123,7 @@ class Mob(pygame.sprite.Sprite):
         self.speedy = 3
         
         # Melhora a colisão estabelecendo um raio de um circulo
-        self.radius = int(self.rect.width * .85 / 2)
+        self.radius = int(self.rect.width * .80 / 2)
         
     # Metodo que atualiza a posição do meteoro
     def update(self):
