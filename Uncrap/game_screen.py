@@ -43,7 +43,7 @@ class Player(pygame.sprite.Sprite):
         self.speedx = 0
         self.speedy = 0
         
-        self.dir_prox = SOBE
+        self.dir_prox = PARADO
         
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = 40
@@ -331,7 +331,18 @@ def game_screen(screen):
                         player.dir_prox = ESQUERDA
                     if event.key == pygame.K_RIGHT:
                         player.dir_prox = DIREITA
-                                            
+                        
+                if event.type == pygame.KEYUP:
+                    # Dependendo da tecla, altera a velocidade.
+                    if event.key == pygame.K_LEFT:
+                        player.dir_prox = PARADO
+                    if event.key == pygame.K_RIGHT:
+                        player.dir_prox = PARADO
+                    if event.key == pygame.K_UP:
+                        player.dir_prox = PARADO
+                    if event.key == pygame.K_DOWN:
+                        player.dir_prox = PARADO
+                    
         # Depois de processar os eventos.
         # Atualiza a acao de cada sprite.
         all_sprites.update()
