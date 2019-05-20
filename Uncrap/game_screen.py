@@ -267,8 +267,6 @@ def game_screen(screen):
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
 
-    # Carrega o fundo do jogo
-   
     # Carrega os sons do jogo
     pygame.mixer.music.load(path.join(snd_dir, 'tgfcoder-FrozenJam-SeamlessLoop.ogg'))
     pygame.mixer.music.set_volume(0.4)
@@ -343,14 +341,12 @@ def game_screen(screen):
                     if event.key == pygame.K_DOWN:
                         player.dir_prox = PARADO
                     """
-        # Depois de processar os eventos.
-        # Atualiza a acao de cada sprite.
+        # Depois de processar os eventos atualiza a acao de cada sprite.
         all_sprites.update()
         
         if state == PLAYING:
             # Verifica se houve colisão entre nave e meteoro
             hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)
-            #hits2 = pygame.sprite.spritecollide(player, wall, False, pygame.sprite.collide_circle)
             if hits:
                 # Toca o som da colisão
                 boom_sound.play()
