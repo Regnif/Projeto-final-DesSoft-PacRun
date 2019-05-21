@@ -312,7 +312,7 @@ def game_screen(screen):
     # Loop principal.
     pygame.mixer.music.play(loops=-1)
 
-    score = 0
+    score = -100
 
     lives = 3
 
@@ -384,6 +384,11 @@ def game_screen(screen):
                     player = Player(assets["player_img"])
                     all_sprites.add(player)
 
+        #repopula de comida
+        if len(food_group) == 0 :
+            print ("Fim") # fazer aparecer novamente a comida
+        
+        
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(BLACK)
         screen.blit(wall, (0,0))
