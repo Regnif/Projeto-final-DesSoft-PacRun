@@ -56,7 +56,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         
-        if self.rect.x % 40 == 0 and self.rect.y % 40 == 0: #or self.rect.x == 0 or self.rect.y == 0 or self.rect.x == 1200 or self.rect.y == 640:
+        if self.rect.x % 40 == 0 and self.rect.y % 40 == 0:
             
             if self.dir_prox == SOBE:
                 self.speedx = 0
@@ -73,21 +73,6 @@ class Player(pygame.sprite.Sprite):
         if self.dir_prox == PARADO:
             self.speedx = 0
             self.speedy = 0
-        #print("Minhas coordenadas são {0} e {1}".format(self.rect.x, self.rect.y), "Meu Estado é {}".format(self.dir_prox))
-        # Mantem dentro da tela
-        
-        if (self.rect.x + 40) > WIDTH:
-            self.rect.x = (WIDTH - 40)
-            self.dir_prox = PARADO
-        if self.rect.left < 0:
-            self.rect.left = 0
-            self.dir_prox = PARADO
-        if self.rect.top < 0:
-            self.rect.top = 0
-            self.dir_prox = PARADO
-        if (self.rect.y + 40) > HEIGHT:
-            self.rect.y = (HEIGHT - 40)
-            self.dir_prox = PARADO
 
     def rollback(self):
         self.rect.x = self.previous_pos_x
