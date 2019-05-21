@@ -60,15 +60,15 @@ class Player(pygame.sprite.Sprite):
             
             if self.dir_prox == SOBE:
                 self.speedx = 0
-                self.speedy = -8
+                self.speedy = -4
             elif self.dir_prox == DIREITA:
-                self.speedx = 8
+                self.speedx = 4
                 self.speedy = 0
             elif self.dir_prox == DESCE:
                 self.speedx = 0
-                self.speedy = 8
+                self.speedy = 4
             elif self.dir_prox == ESQUERDA:
-                self.speedx = -8
+                self.speedx = -4
                 self.speedy = 0
         if self.dir_prox == PARADO:
             self.speedx = 0
@@ -119,8 +119,8 @@ class Mob(pygame.sprite.Sprite):
         # Sorteia um lugar inicial em y
         self.rect.y = self.centery
         # Sorteia uma velocidade inicial
-        self.speedx = 3
-        self.speedy = 3
+        self.speedx = 4
+        self.speedy = 4
         
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = int(self.rect.width * .80 / 2)
@@ -243,8 +243,8 @@ class Explosion(pygame.sprite.Sprite):
 def load_assets(img_dir, snd_dir, fnt_dir):
     assets = {}
     assets["player_img"] = pygame.image.load(path.join(img_dir, "Pac.png")).convert()
-    assets["ground_img"] = pygame.image.load(path.join(img_dir, "ground2.png")).convert()
-    assets["dirt_img"] = pygame.image.load(path.join(img_dir, "dirt2.png")).convert()
+    assets["ground_img"] = pygame.image.load(path.join(img_dir, "fund_cla.png")).convert()
+    assets["dirt_img"] = pygame.image.load(path.join(img_dir, "fund_esc.png")).convert()
     assets["mob_img"] = pygame.image.load(path.join(img_dir, "ghost.png")).convert()
     assets["background"] = pygame.image.load(path.join(img_dir, 'Plano_de_fundo.png')).convert()
     assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl3.wav'))
