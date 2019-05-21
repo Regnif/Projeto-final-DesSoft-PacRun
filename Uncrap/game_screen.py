@@ -46,7 +46,7 @@ class Player(pygame.sprite.Sprite):
         self.dir_prox = PARADO
         
         # Melhora a colisão estabelecendo um raio de um circulo
-        self.radius = 40
+        self.radius = 20
     
     # Metodo que atualiza a posição da navinha
     def update(self):
@@ -153,7 +153,12 @@ class Food(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-
+        self.radius = 5
+    """
+    def refeicao(self):
+        #Apaga a comida
+        self.kill()
+    """
 def make_map(ground_img, dirt_img, food_img):
     map_image = pygame.Surface((1280,720)) # used as the surface for rendering, which is scaled        
     map_image.set_colorkey(BLACK)
@@ -362,6 +367,12 @@ def game_screen(screen):
             hits = pygame.sprite.spritecollide(player, wall_group, False, pygame.sprite.collide_rect)
             if hits:
                 player.rollback()
+            
+            #Verifica se houve colisao entre jogador e comida
+            
+            hits = pygame.sprite.spritecollide(player, food_group, True, pygame.sprite.collide_circle)
+            if hits:
+                score += 100
            
         elif state == EXPLODING:
             now = pygame.time.get_ticks()
