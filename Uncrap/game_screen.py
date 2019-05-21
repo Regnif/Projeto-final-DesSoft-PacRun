@@ -142,8 +142,19 @@ class Wall(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
     
+class Food(pygame.sprite.Sprite):
+    
+    def __init__(self,food_img,x,y):
+        
+        pygame.sprite.Sprite.__init__(self)
+        
+        self.image = pygame.transform.scale(food_img,(40,40))
+        self.image.set_colorkey(BLACK)
+        self.rect = self.image.get_rect()
+        self.rect.x = x
+        self.rect.y = y
 
-def make_map(ground_img, dirt_img):
+def make_map(ground_img, dirt_img, food_img):
     map_image = pygame.Surface((1280,720)) # used as the surface for rendering, which is scaled        
     map_image.set_colorkey(BLACK)
 
@@ -177,12 +188,15 @@ def make_map(ground_img, dirt_img):
                 
     # Monta as paredes para colisão.
     wall_group = pygame.sprite.Group()
+    food_group = pygame.sprite.Group()
     for y, layer in enumerate(game_map):
         for x, tile in enumerate(layer):
             if tile == '1':
                 wall_group.add(Wall(x*40,y*40))
+            if tile == '0':
+                food_group.add(Food(food_img,x*40,y*40))
     
-    return map_image, wall_group
+    return map_image, wall_group, food_group
             
 # Classe que representa uma explosão de meteoro
 class Explosion(pygame.sprite.Sprite):
@@ -244,6 +258,7 @@ def load_assets(img_dir, snd_dir, fnt_dir):
     assets["background"] = pygame.image.load(path.join(img_dir, 'Plano_de_fundo.png')).convert()
     assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl3.wav'))
     assets["destroy_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl6.wav'))
+    assets["food_img"] = pygame.image.load(path.join(img_dir, "comida.png")).convert()
     explosion_anim = []
     for i in range(9):
         filename = 'regularExplosion0{}.png'.format(i)
@@ -268,7 +283,7 @@ def game_screen(screen):
     boom_sound = assets["boom_sound"]
     
     # Cria um jogador. O construtor será chamado automaticamente.
-    wall, wall_group = make_map(assets["ground_img"],assets["dirt_img"])
+    wall, wall_group, food_group = make_map(assets["ground_img"],assets["dirt_img"],assets["food_img"])
     player = Player(assets["player_img"])
 
     # Carrega a fonte para desenhar o score.
@@ -277,6 +292,7 @@ def game_screen(screen):
     # Cria um grupo de todos os sprites e adiciona a nave.
     all_sprites = pygame.sprite.Group()
     all_sprites.add(player)
+    all_sprites.add(food_group)
 
     # Cria um grupo só dos meteoros
     mobs = pygame.sprite.Group()
@@ -324,18 +340,7 @@ def game_screen(screen):
                         player.dir_prox = ESQUERDA
                     if event.key == pygame.K_RIGHT:
                         player.dir_prox = DIREITA
-                """        
-                if event.type == pygame.KEYUP:
-                    # Dependendo da tecla, altera a velocidade.
-                    if event.key == pygame.K_LEFT:
-                        player.dir_prox = PARADO
-                    if event.key == pygame.K_RIGHT:
-                        player.dir_prox = PARADO
-                    if event.key == pygame.K_UP:
-                        player.dir_prox = PARADO
-                    if event.key == pygame.K_DOWN:
-                        player.dir_prox = PARADO
-                    """
+                
         # Depois de processar os eventos atualiza a acao de cada sprite.
         all_sprites.update()
         
@@ -353,7 +358,7 @@ def game_screen(screen):
                 explosion_tick = pygame.time.get_ticks()
                 explosion_duration = explosao.frame_ticks * len(explosao.explosion_anim) + 400
            
-            # Verifica se houve colisão entre nave e paredes
+            # Verifica se houve colisão entre jogador e paredes
             hits = pygame.sprite.spritecollide(player, wall_group, False, pygame.sprite.collide_rect)
             if hits:
                 player.rollback()
