@@ -24,7 +24,7 @@ class Player(pygame.sprite.Sprite):
         self.image = player_img
         
         # Diminuindo o tamanho da imagem.
-        self.image = pygame.transform.scale(player_img, (80, 80))
+        self.image = pygame.transform.scale(player_img, (40, 40))
         
         # Deixando transparente.
         self.image.set_colorkey(WHITE)
@@ -33,8 +33,8 @@ class Player(pygame.sprite.Sprite):
         self.rect = self.image.get_rect()
         
         # Centraliza embaixo da tela.
-        self.rect.x = 80
-        self.rect.y = 80
+        self.rect.x = 40
+        self.rect.y = 40
         
         self.previous_pos_x = self.rect.x
         self.previous_pos_y = self.rect.y
@@ -56,7 +56,7 @@ class Player(pygame.sprite.Sprite):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
         
-        if self.rect.x % 80 == 0 and self.rect.y % 80 == 0: #or self.rect.x == 0 or self.rect.y == 0 or self.rect.x == 1200 or self.rect.y == 640:
+        if self.rect.x % 40 == 0 and self.rect.y % 40 == 0: #or self.rect.x == 0 or self.rect.y == 0 or self.rect.x == 1200 or self.rect.y == 640:
             
             if self.dir_prox == SOBE:
                 self.speedx = 0
@@ -76,8 +76,8 @@ class Player(pygame.sprite.Sprite):
         #print("Minhas coordenadas são {0} e {1}".format(self.rect.x, self.rect.y), "Meu Estado é {}".format(self.dir_prox))
         # Mantem dentro da tela
         
-        if (self.rect.x + 80) > WIDTH:
-            self.rect.x = (WIDTH - 80)
+        if (self.rect.x + 40) > WIDTH:
+            self.rect.x = (WIDTH - 40)
             self.dir_prox = PARADO
         if self.rect.left < 0:
             self.rect.left = 0
@@ -85,8 +85,8 @@ class Player(pygame.sprite.Sprite):
         if self.rect.top < 0:
             self.rect.top = 0
             self.dir_prox = PARADO
-        if (self.rect.y + 80) > HEIGHT:
-            self.rect.y = (HEIGHT - 80)
+        if (self.rect.y + 40) > HEIGHT:
+            self.rect.y = (HEIGHT - 40)
             self.dir_prox = PARADO
 
     def rollback(self):
@@ -104,7 +104,7 @@ class Mob(pygame.sprite.Sprite):
         pygame.sprite.Sprite.__init__(self)
         
         # Diminuindo o tamanho da imagem.
-        self.image = pygame.transform.scale(mob_img, (80, 80))
+        self.image = pygame.transform.scale(mob_img, (40, 40))
         
         # Deixando transparente.
         self.image.set_colorkey(WHITE)
@@ -123,7 +123,7 @@ class Mob(pygame.sprite.Sprite):
         self.speedy = 4
         
         # Melhora a colisão estabelecendo um raio de um circulo
-        self.radius = int(self.rect.width * .80 / 2)
+        self.radius = int(self.rect.width * .40 / 2)
         
     # Metodo que atualiza a posição do meteoro
     def update(self):
@@ -152,7 +152,7 @@ class Wall(pygame.sprite.Sprite):
         # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
         
-        self.image = pygame.Surface((80, 80))
+        self.image = pygame.Surface((40, 40))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
@@ -162,30 +162,40 @@ def make_map(ground_img, dirt_img):
     map_image = pygame.Surface((1280,720)) # used as the surface for rendering, which is scaled        
     map_image.set_colorkey(BLACK)
 
-    game_map = [['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
-                ['1','0','0','0','0','1','0','0','0','0','0','0','0','1','0','1'],
-                ['1','0','1','1','0','1','0','1','0','1','0','1','0','0','0','1'],
-                ['1','0','0','0','0','0','0','1','0','1','0','1','1','0','1','1'],
-                ['1','0','1','1','0','1','1','1','0','0','0','0','1','0','0','1'],
-                ['1','0','0','0','0','0','0','1','1','1','1','0','1','1','0','1'],
-                ['1','0','1','1','0','1','0','0','0','0','1','0','0','1','0','1'],
-                ['1','0','0','0','0','1','1','0','1','0','0','0','0','0','0','1'],
-                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1']]
+    game_map = [['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','0','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','0','0','0','0','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1']]
+
 
     # Pinta o background.    
     for y, layer in enumerate(game_map):
         for x, tile in enumerate(layer):
             if tile == '0':
-                map_image.blit(ground_img,(x*80,y*80))
+                map_image.blit(ground_img,(x*40,y*40))
             if tile == '1':
-                map_image.blit(dirt_img,(x*80,y*80))
+                map_image.blit(dirt_img,(x*40,y*40))
                 
     # Monta as paredes para colisão.
     wall_group = pygame.sprite.Group()
     for y, layer in enumerate(game_map):
         for x, tile in enumerate(layer):
             if tile == '1':
-                wall_group.add(Wall(x*80,y*80))
+                wall_group.add(Wall(x*40,y*40))
     
     return map_image, wall_group
             
