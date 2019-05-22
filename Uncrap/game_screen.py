@@ -104,8 +104,8 @@ class Mob(pygame.sprite.Sprite):
         # Sorteia um lugar inicial em y
         self.rect.y = self.centery
         # Sorteia uma velocidade inicial
-        self.speedx = 0
-        self.speedy = 0
+        self.speedx = 2
+        self.speedy = 2
         
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = int(self.rect.width * .40 / 2)
@@ -303,7 +303,7 @@ def game_screen(screen):
     mobs = pygame.sprite.Group()
     
     # Cria 8 meteoros e adiciona no grupo meteoros
-    for i in range(1):
+    for i in range(100):
         m = Mob(assets["mob_img"])
         all_sprites.add(m)
         mobs.add(m)
