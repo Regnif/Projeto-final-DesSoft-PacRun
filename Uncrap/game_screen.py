@@ -96,16 +96,16 @@ class Mob(pygame.sprite.Sprite):
         
         # Detalhes sobre o posicionamento.
         self.rect = self.image.get_rect()
-        self.centerx = 640
-        self.centery = 200
+        self.centerx = 1200
+        self.centery = 40
         
         # Sorteia um lugar inicial em x
         self.rect.x = self.centerx
         # Sorteia um lugar inicial em y
         self.rect.y = self.centery
         # Sorteia uma velocidade inicial
-        self.speedx = 4
-        self.speedy = 4
+        self.speedx = 0
+        self.speedy = 0
         
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = int(self.rect.width * .40 / 2)
@@ -259,7 +259,7 @@ def load_assets(img_dir, snd_dir, fnt_dir):
     assets["player_img"] = pygame.image.load(path.join(img_dir, "Pac.png")).convert()
     assets["ground_img"] = pygame.image.load(path.join(img_dir, "fund_cla.png")).convert()
     assets["dirt_img"] = pygame.image.load(path.join(img_dir, "fund_esc.png")).convert()
-    assets["mob_img"] = pygame.image.load(path.join(img_dir, "ghost.png")).convert()
+    assets["mob_img"] = pygame.image.load(path.join(img_dir, "Personagem.png")).convert()
     assets["background"] = pygame.image.load(path.join(img_dir, 'Plano_de_fundo.png')).convert()
     assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl3.wav'))
     assets["destroy_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl6.wav'))
