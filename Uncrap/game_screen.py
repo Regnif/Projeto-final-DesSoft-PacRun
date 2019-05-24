@@ -96,7 +96,7 @@ class Mob(pygame.sprite.Sprite):
         
         # Detalhes sobre o posicionamento.
         self.rect = self.image.get_rect()
-        self.centerx = 1200
+        self.centerx = 1160
         self.centery = 40
         
         # Sorteia um lugar inicial em x
@@ -106,7 +106,10 @@ class Mob(pygame.sprite.Sprite):
         # Sorteia uma velocidade inicial
         self.speedx = 2
         self.speedy = 2
-        
+        self.last_posx = self.rect.x
+        self.last_posy = self.rect.y
+        self.dir_prox = DIREITA
+                
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = int(self.rect.width * .40 / 2)
         
@@ -114,21 +117,27 @@ class Mob(pygame.sprite.Sprite):
     def update(self):
         self.rect.x += self.speedx
         self.rect.y += self.speedy
+        self.last_posx = self.rect.x
+        self.last_posy = self.rect.y
         
-        # Mantem dentro da tela
-        if self.rect.right > WIDTH:
-            self.rect.right = WIDTH
-            self.speedx *= -1
-        if self.rect.left < 0:
-            self.rect.left = 0
-            self.speedx *= -1
-        if self.rect.top < 0:
-            self.rect.top = 0
-            self.speedy *= -1
-        if self.rect.bottom > HEIGHT:
-            self.rect.bottom = HEIGHT
-            self.speedy *= -1
 
+        if self.dir_prox == SOBE:
+            self.speedx = 0
+            self.speedy = -2
+        elif self.dir_prox == DIREITA:
+            self.speedx = 2
+            self.speedy = 0
+        elif self.dir_prox == DESCE:
+            self.speedx = 0
+            self.speedy = 2
+        elif self.dir_prox == ESQUERDA:
+            self.speedx = -2
+            self.speedy = 0
+        
+    def troca_dir(self):
+        proxima_direcao = random.randint(0,3)
+        self.dir_prox = proxima_direcao
+    
 class Wall(pygame.sprite.Sprite):
     
     # Construtor da classe.
@@ -154,11 +163,7 @@ class Food(pygame.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
         self.radius = 5
-    """
-    def refeicao(self):
-        #Apaga a comida
-        self.kill()
-    """
+        
 def make_map(ground_img, dirt_img, food_img):
     map_image = pygame.Surface((1280,720)) # used as the surface for rendering, which is scaled        
     map_image.set_colorkey(BLACK)
@@ -202,7 +207,32 @@ def make_map(ground_img, dirt_img, food_img):
                 food_group.add(Food(food_img,x*40,y*40))
     
     return map_image, wall_group, food_group
-            
+
+def remake_map(food_img):
+    game_map = [['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1'],
+                ['1','0','0','0','0','0','0','0','0','0','0','1','0','0','0','0','0','0','0','0','0','0','0','0','0','0','1','0','0','0','0','1'],
+                ['1','0','1','0','1','1','1','0','1','1','0','1','0','1','0','1','1','1','0','1','1','0','1','1','1','0','1','0','0','0','0','1'],
+                ['1','0','1','0','0','0','0','0','0','1','0','1','0','1','0','0','0','0','0','0','1','0','0','0','0','0','1','0','0','0','0','1'],
+                ['1','0','1','0','1','1','1','1','0','1','0','1','0','1','0','1','0','1','1','0','1','0','1','1','1','0','1','0','1','1','1','1'],
+                ['1','0','0','0','0','0','0','0','0','1','0','0','0','0','0','0','0','0','0','0','0','0','1','0','0','0','0','0','0','0','0','1'],
+                ['1','1','1','1','1','0','1','1','0','1','0','1','1','0','1','1','0','1','0','1','1','0','1','0','1','1','1','0','1','1','0','1'],
+                ['1','0','0','0','1','0','1','0','0','0','0','0','0','0','0','0','0','0','0','1','1','0','0','0','1','0','0','0','0','1','0','1'],
+                ['1','0','1','0','0','0','0','0','1','1','1','1','1','0','1','0','1','1','0','0','0','0','1','0','0','0','1','1','0','0','0','1'],
+                ['1','0','1','0','1','1','1','0','0','0','0','0','0','0','1','0','1','1','1','0','1','0','1','1','1','0','1','0','0','1','0','1'],
+                ['1','0','1','0','0','0','0','0','1','1','0','1','0','1','1','0','0','0','1','0','1','0','0','0','0','0','0','0','1','1','0','1'],
+                ['1','0','1','0','1','1','1','0','0','0','0','1','0','0','0','0','1','0','1','0','1','0','1','1','0','1','0','1','1','0','0','1'],
+                ['1','0','0','0','1','0','0','0','1','1','0','1','1','0','1','0','1','0','1','0','1','0','1','1','0','1','0','1','1','0','1','1'],
+                ['1','1','1','0','1','0','1','1','1','0','0','0','1','0','1','0','1','0','1','0','1','0','1','1','0','1','0','0','0','0','1','1'],
+                ['1','0','0','0','1','0','0','0','0','0','1','0','1','0','0','0','0','0','0','0','0','0','0','1','0','0','0','1','1','0','0','1'],
+                ['1','0','1','1','1','0','1','1','1','0','1','0','1','0','1','1','0','1','1','0','1','1','0','1','0','1','0','1','1','1','0','1'],
+                ['1','0','0','0','0','0','0','0','0','0','1','0','0','0','1','1','0','0','0','0','0','0','0','1','0','0','0','0','0','0','0','1'],
+                ['1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1','1']]
+    food_group = pygame.sprite.Group()
+    for y,layer in enumerate(game_map):
+        for x,tile in enumerate(layer):
+            if tile == '0':
+                food_group.add(Food(food_img,x*40,y*40))
+    return food_group
 # Classe que representa uma explosão de meteoro
 class Explosion(pygame.sprite.Sprite):
 
@@ -303,11 +333,12 @@ def game_screen(screen):
     mobs = pygame.sprite.Group()
     
     # Cria 8 meteoros e adiciona no grupo meteoros
-    for i in range(100):
+    
+    for i in range(1):
         m = Mob(assets["mob_img"])
         all_sprites.add(m)
         mobs.add(m)
-       
+   
 
     # Loop principal.
     pygame.mixer.music.play(loops=-1)
@@ -374,6 +405,12 @@ def game_screen(screen):
             if hits:
                 score += 100
            
+            #Verifica se houve colisao entre mob e paredes
+            for mob in mobs:
+                hits = pygame.sprite.spritecollide(mob, wall_group, False, pygame.sprite.collide_circle)
+                if hits:
+                    mob.troca_dir()
+            
         elif state == EXPLODING:
             now = pygame.time.get_ticks()
             if now - explosion_tick > explosion_duration:
@@ -385,9 +422,10 @@ def game_screen(screen):
                     all_sprites.add(player)
 
         #repopula de comida
-        if len(food_group) == 0 :
-            print ("Fim") # fazer aparecer novamente a comida
-        
+        if len(food_group) == 0:
+            score -= 100
+            food_group = remake_map(assets["food_img"])
+            all_sprites.add(food_group)
         
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(BLACK)
