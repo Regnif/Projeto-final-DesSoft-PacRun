@@ -449,19 +449,19 @@ def game_screen(screen):
                     all_sprites.add(player)
                     for mob in mobs:
                         mob.player = player
-
-        #repopula de comida
-        if len(food_group) == 0:
-            score -= 100
-            food_group = remake_map(assets["food_img"])
-            all_sprites.add(food_group)
-            
+        
         rodadas = 0 
         if score % 15000 == 0 and score != 0:
             rodadas += 1
             m = Mob(assets["mob_img"], player)
             all_sprites.add(m)
             mobs.add(m)
+
+        #repopula de comida
+        if len(food_group) == 0:
+            score -= 100
+            food_group = remake_map(assets["food_img"])
+            all_sprites.add(food_group)
         
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(BLACK)
