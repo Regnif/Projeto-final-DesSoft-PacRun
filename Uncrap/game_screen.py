@@ -456,6 +456,7 @@ def game_screen(screen):
             m = Mob(assets["mob_img"], player)
             all_sprites.add(m)
             mobs.add(m)
+            score += 100
 
         #repopula de comida
         if len(food_group) == 0:
