@@ -430,6 +430,7 @@ def game_screen(screen):
             hits = pygame.sprite.spritecollide(player, food_group, True, pygame.sprite.collide_circle)
             if hits:
                 score += 100
+                
            
             #Verifica se houve colisao entre mob e paredes
             for mob in mobs:
@@ -454,6 +455,13 @@ def game_screen(screen):
             score -= 100
             food_group = remake_map(assets["food_img"])
             all_sprites.add(food_group)
+            
+        rodadas = 0 
+        if score % 15000 == 0 and score != 0:
+            rodadas += 1
+            m = Mob(assets["mob_img"], player)
+            all_sprites.add(m)
+            mobs.add(m)
         
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(BLACK)
