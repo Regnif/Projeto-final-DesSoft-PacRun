@@ -83,7 +83,7 @@ class Player(pygame.sprite.Sprite):
 class Mob(pygame.sprite.Sprite):
     
     # Construtor da classe.
-    def __init__(self, mob_img):
+    def __init__(self, mob_img, player):
         
         # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
@@ -93,6 +93,8 @@ class Mob(pygame.sprite.Sprite):
         
         # Deixando transparente.
         self.image.set_colorkey(WHITE)
+        
+        self.player = player
         
         # Detalhes sobre o posicionamento.
         self.rect = self.image.get_rect()
@@ -115,28 +117,52 @@ class Mob(pygame.sprite.Sprite):
         
     # Metodo que atualiza a posição do meteoro
     def update(self):
+        dx = self.player.rect.x - self.rect.x
+        dy = self.player.rect.y - self.rect.y
+        
+        if abs(dx) > abs(dy):
+            if dx < 0:
+                self.dir_prox = ESQUERDA
+            else:
+                self.dir_prox = DIREITA
+        else:
+            if dy < 0:
+                self.dir_prox = SOBE
+            else:
+                self.dir_prox = DESCE
+        
+        if self.rect.x % 40 == 0 and self.rect.y % 40 == 0:
+            self.atualiza_velocidade()
+            
+        self.previous_pos_x = self.rect.x
+        self.previous_pos_y = self.rect.y
         self.rect.x += self.speedx
         self.rect.y += self.speedy
-        self.last_posx = self.rect.x
-        self.last_posy = self.rect.y
-        
 
+
+    def atualiza_velocidade(self):            
         if self.dir_prox == SOBE:
             self.speedx = 0
-            self.speedy = -2
+            self.speedy = -4
         elif self.dir_prox == DIREITA:
-            self.speedx = 2
+            self.speedx = 4
             self.speedy = 0
         elif self.dir_prox == DESCE:
             self.speedx = 0
-            self.speedy = 2
+            self.speedy = 4
         elif self.dir_prox == ESQUERDA:
-            self.speedx = -2
+            self.speedx = -4
             self.speedy = 0
-        
-    def troca_dir(self):
-        proxima_direcao = random.randint(0,3)
-        self.dir_prox = proxima_direcao
+        elif self.dir_prox == PARADO:
+            self.speedx = 0
+            self.speedy = 0
+                
+    def rollback(self):
+        self.rect.x = self.previous_pos_x
+        self.rect.y = self.previous_pos_y
+        self.dir_prox = random.randint(0,3)
+        self.atualiza_velocidade()
+       
     
 class Wall(pygame.sprite.Sprite):
     
@@ -335,7 +361,7 @@ def game_screen(screen):
     # Cria 8 meteoros e adiciona no grupo meteoros
     
     for i in range(1):
-        m = Mob(assets["mob_img"])
+        m = Mob(assets["mob_img"], player)
         all_sprites.add(m)
         mobs.add(m)
    
@@ -407,9 +433,9 @@ def game_screen(screen):
            
             #Verifica se houve colisao entre mob e paredes
             for mob in mobs:
-                hits = pygame.sprite.spritecollide(mob, wall_group, False, pygame.sprite.collide_circle)
+                hits = pygame.sprite.spritecollide(mob, wall_group, False, pygame.sprite.collide_rect)
                 if hits:
-                    mob.troca_dir()
+                    mob.rollback()
             
         elif state == EXPLODING:
             now = pygame.time.get_ticks()
@@ -420,6 +446,8 @@ def game_screen(screen):
                     state = PLAYING
                     player = Player(assets["player_img"])
                     all_sprites.add(player)
+                    for mob in mobs:
+                        mob.player = player
 
         #repopula de comida
         if len(food_group) == 0:
