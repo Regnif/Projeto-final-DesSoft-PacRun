@@ -452,7 +452,7 @@ def game_screen(screen):
                     state = DONE
                 else:
                     state = PLAYING
-                    player = Player(assets["player_img"])
+                    player = Player(assets["player_img"],assets["move_sound"])
                     all_sprites.add(player)
                     for mob in mobs:
                         mob.player = player
@@ -491,4 +491,4 @@ def game_screen(screen):
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
 
-    return QUIT
+    return OVER

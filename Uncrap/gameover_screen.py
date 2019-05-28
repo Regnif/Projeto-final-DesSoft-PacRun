@@ -11,7 +11,7 @@ from os import path
 
 from config import img_dir, BLACK, FPS, INIT, QUIT, YELLOW, HEIGHT, WIDTH
 
-def help_screen(screen):
+def gameover_screen(screen):
     
     score_font = pygame.font.Font(path.join(fnt_dir, "PressStart2P.ttf"), 28)
     
@@ -47,7 +47,7 @@ def help_screen(screen):
         screen.fill(BLACK)
         screen.blit(background, background_rect)
 
-        text_surface = score_font.render("Oi", True, YELLOW)
+        text_surface = score_font.render("{:08d}".format(score), True, YELLOW)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (WIDTH / 2,  HEIGHT / 2)
         screen.blit(text_surface, text_rect)

@@ -7,10 +7,11 @@ import time
 
 from os import path
 
-from config import WIDTH, HEIGHT, INIT, GAME, QUIT, HELP
+from config import WIDTH, HEIGHT, INIT, GAME, QUIT, HELP, OVER
 from init_screen import init_screen
 from help_screen import help_screen
 from game_screen import game_screen
+from gameover_screen import gameover_screen
 
 # Inicialização do Pygame.
 pygame.init()
@@ -33,6 +34,8 @@ try:
             state = game_screen(screen)
         elif state == HELP:
             state = help_screen(screen)
+        elif state == OVER:
+            state = gameover_screen(screen)
         else:
             state = QUIT
 finally:
