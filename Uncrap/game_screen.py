@@ -15,7 +15,7 @@ SALTANDO = 5
 class Player(pygame.sprite.Sprite):
     
     # Construtor da classe.
-    def __init__(self, player_img):
+    def __init__(self, player_img, move_snd):
         
         # Construtor da classe pai (Sprite).
         pygame.sprite.Sprite.__init__(self)
@@ -31,6 +31,9 @@ class Player(pygame.sprite.Sprite):
         
         # Detalhes sobre o posicionamento.
         self.rect = self.image.get_rect()
+        
+        #Define o som do movimento
+        self.move_snd = move_snd
         
         # Centraliza embaixo da tela.
         self.rect.x = 40
@@ -61,15 +64,19 @@ class Player(pygame.sprite.Sprite):
             if self.dir_prox == SOBE:
                 self.speedx = 0
                 self.speedy = -4
+                self.move_snd.play()
             elif self.dir_prox == DIREITA:
                 self.speedx = 4
                 self.speedy = 0
+                self.move_snd.play()
             elif self.dir_prox == DESCE:
                 self.speedx = 0
                 self.speedy = 4
+                self.move_snd.play()
             elif self.dir_prox == ESQUERDA:
                 self.speedx = -4
                 self.speedy = 0
+                self.move_snd.play()
         if self.dir_prox == PARADO:
             self.speedx = 0
             self.speedy = 0
@@ -317,8 +324,8 @@ def load_assets(img_dir, snd_dir, fnt_dir):
     assets["dirt_img"] = pygame.image.load(path.join(img_dir, "fund_esc.png")).convert()
     assets["mob_img"] = pygame.image.load(path.join(img_dir, "Personagem.png")).convert()
     assets["background"] = pygame.image.load(path.join(img_dir, 'Plano_de_fundo.png')).convert()
-    assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl3.wav'))
-    assets["destroy_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'expl6.wav'))
+    assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'The_sound_of_death.wav'))
+    assets["move_sound"] = pygame.mixer.Sound(path.join(snd_dir,'Waka_waka_sound.wav'))
     assets["food_img"] = pygame.image.load(path.join(img_dir, "comida.png")).convert()
     explosion_anim = []
     for i in range(9):
@@ -345,7 +352,7 @@ def game_screen(screen):
     
     # Cria um jogador. O construtor será chamado automaticamente.
     wall, wall_group, food_group = make_map(assets["ground_img"],assets["dirt_img"],assets["food_img"])
-    player = Player(assets["player_img"])
+    player = Player(assets["player_img"], assets["move_sound"])
 
     # Carrega a fonte para desenhar o score.
     score_font = assets["score_font"]
@@ -407,7 +414,7 @@ def game_screen(screen):
         all_sprites.update()
         
         if state == PLAYING:
-            # Verifica se houve colisão entre nave e meteoro
+            # Verifica se houve colisão entre jogador e fantasma
             hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)
             if hits:
                 # Toca o som da colisão
