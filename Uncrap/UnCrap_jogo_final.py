@@ -36,7 +36,7 @@ try:
         elif state == HELP:
             state = help_screen(screen)
         elif state == OVER:
-            state = gameover_screen(screen, score - 100)
+            state = gameover_screen(screen, score)
         else:
             state = QUIT
 finally:
