@@ -2,7 +2,7 @@ import pygame
 import random
 from os import path
 
-from config import img_dir, snd_dir, fnt_dir, WIDTH, HEIGHT, WHITE, BLACK, YELLOW, RED, FPS, QUIT
+from config import img_dir, snd_dir, fnt_dir, WIDTH, HEIGHT, WHITE, BLACK, YELLOW, RED, FPS, QUIT, OVER
 
 SOBE = 0
 DIREITA = 1
