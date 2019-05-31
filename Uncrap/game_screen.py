@@ -1,7 +1,6 @@
 import pygame
 import random
 from os import path
-
 from config import img_dir, snd_dir, fnt_dir, WIDTH, HEIGHT, WHITE, BLACK, YELLOW, RED, FPS, QUIT, OVER
 
 SOBE = 0
@@ -9,7 +8,6 @@ DIREITA = 1
 DESCE = 2
 ESQUERDA = 3
 PARADO = 4
-SALTANDO = 5
 
 # Classe Jogador que representa o Pac
 class Player(pygame.sprite.Sprite):
@@ -375,10 +373,10 @@ def game_screen(screen):
 
     # Loop principal.
     pygame.mixer.music.play(loops=-1)
-
+    
     score = -100
 
-    lives = 3
+    lives = 1
 
     PLAYING = 0
     EXPLODING = 1
@@ -438,7 +436,6 @@ def game_screen(screen):
             if hits:
                 score += 100
                 
-           
             #Verifica se houve colisao entre mob e paredes
             for mob in mobs:
                 hits = pygame.sprite.spritecollide(mob, wall_group, False, pygame.sprite.collide_rect)
@@ -491,4 +488,4 @@ def game_screen(screen):
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
 
-    return OVER,score
+    return OVER, score
