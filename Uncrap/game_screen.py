@@ -491,4 +491,4 @@ def game_screen(screen):
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
 
-    return OVER
+    return OVER,score

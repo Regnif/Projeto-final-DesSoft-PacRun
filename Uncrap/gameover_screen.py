@@ -8,10 +8,9 @@ Created on Tue May 28 10:23:12 2019
 import pygame
 import random
 from os import path
+from config import img_dir, fnt_dir, BLACK, FPS, INIT, QUIT, YELLOW, HEIGHT, WIDTH
 
-from config import img_dir, BLACK, FPS, INIT, QUIT, YELLOW, HEIGHT, WIDTH
-
-def gameover_screen(screen):
+def gameover_screen(screen,score):
     
     score_font = pygame.font.Font(path.join(fnt_dir, "PressStart2P.ttf"), 28)
     

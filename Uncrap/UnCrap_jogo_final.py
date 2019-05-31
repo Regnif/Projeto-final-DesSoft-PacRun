@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# -*- codingp: utf-8 -*-
 
 # Importando as bibliotecas necessárias.
 import pygame
@@ -27,15 +27,16 @@ pygame.display.set_caption("UnCrap")
 # Comando para evitar travamentos.
 try:
     state = INIT
+    score = 0
     while state != QUIT:
         if state == INIT:
             state = init_screen(screen)
         elif state == GAME:
-            state = game_screen(screen)
+            state, score = game_screen(screen)
         elif state == HELP:
             state = help_screen(screen)
         elif state == OVER:
-            state = gameover_screen(screen)
+            state = gameover_screen(screen, score - 100)
         else:
             state = QUIT
 finally:
