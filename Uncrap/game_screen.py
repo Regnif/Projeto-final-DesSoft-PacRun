@@ -34,8 +34,8 @@ class Player(pygame.sprite.Sprite):
         self.move_snd = move_snd
         
         # Centraliza embaixo da tela.
-        self.rect.x = 40
-        self.rect.y = 40
+        self.rect.x = 1200
+        self.rect.y = 640
         
         self.previous_pos_x = self.rect.x
         self.previous_pos_y = self.rect.y
@@ -49,7 +49,7 @@ class Player(pygame.sprite.Sprite):
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = 20
     
-    # Metodo que atualiza a posição da navinha
+    # Metodo que atualiza a posição d0 pac
     def update(self):
         self.previous_pos_x = self.rect.x
         self.previous_pos_y = self.rect.y
@@ -120,7 +120,7 @@ class Mob(pygame.sprite.Sprite):
         # Melhora a colisão estabelecendo um raio de um circulo
         self.radius = int(self.rect.width * .40 / 2)
         
-    # Metodo que atualiza a posição do meteoro
+    # Metodo que atualiza a posição do fantasma
     def update(self):
         dx = self.player.rect.x - self.rect.x
         dy = self.player.rect.y - self.rect.y
@@ -264,7 +264,7 @@ def remake_map(food_img):
             if tile == '0':
                 food_group.add(Food(food_img,x*40,y*40))
     return food_group
-# Classe que representa uma explosão de meteoro
+# Classe que representa uma explosão 
 class Explosion(pygame.sprite.Sprite):
 
     # Construtor da classe.
@@ -355,15 +355,15 @@ def game_screen(screen):
     # Carrega a fonte para desenhar o score.
     score_font = assets["score_font"]
 
-    # Cria um grupo de todos os sprites e adiciona a nave.
+    # Cria um grupo de todos os sprites e adiciona o pac.
     all_sprites = pygame.sprite.Group()
     all_sprites.add(player)
     all_sprites.add(food_group)
 
-    # Cria um grupo só dos meteoros
+    # Cria um grupo só dos mobs
     mobs = pygame.sprite.Group()
     
-    # Cria 8 meteoros e adiciona no grupo meteoros
+    # Cria mob e adiciona no grupo mobs
     
     for i in range(1):
         m = Mob(assets["mob_img"], player)
