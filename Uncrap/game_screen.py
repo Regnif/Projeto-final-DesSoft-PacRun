@@ -1,5 +1,7 @@
 import pygame
+from threading import Timer
 import random
+import time
 from os import path
 from config import img_dir, snd_dir, fnt_dir, WIDTH, HEIGHT, WHITE, BLACK, YELLOW, RED, FPS, QUIT, OVER
 
@@ -348,7 +350,7 @@ def load_assets(img_dir, snd_dir, fnt_dir):
     assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'The_sound_of_death.wav'))
     assets["move_sound"] = pygame.mixer.Sound(path.join(snd_dir,'Waka_waka_sound.wav'))
     assets["food_img"] = pygame.image.load(path.join(img_dir, "comida.png")).convert()
-    assets["pilula_img"] = pygame.image.load(path.join(img_dir, "Pac.png")).convert()
+    assets["pilula_img"] = pygame.image.load(path.join(img_dir, "pilula.png")).convert()
     explosion_anim = []
     for i in range(9):
         filename = 'regularExplosion0{}.png'.format(i)
@@ -360,9 +362,12 @@ def load_assets(img_dir, snd_dir, fnt_dir):
     assets["score_font"] = pygame.font.Font(path.join(fnt_dir, "PressStart2P.ttf"), 28)
     return assets
 
+def inverte():
+    return True
+
 def game_screen(screen):
     
-    Player_presa = True
+    Player_presa = inverte()
     
     # Carrega todos os assets uma vez só e guarda em um dicionário
     assets = load_assets(img_dir, snd_dir, fnt_dir)
@@ -415,6 +420,8 @@ def game_screen(screen):
     state = PLAYING
     while state != DONE:
         
+        print(Player_presa)
+        
         # Ajusta a velocidade do jogo.
         clock.tick(FPS)
         
@@ -443,14 +450,21 @@ def game_screen(screen):
         
         mobs.update(Player_presa)
 
+       
         if state == PLAYING:
+                    
             #Verifica se houve colisao entre jogador e pilula
             hits4 = pygame.sprite.spritecollide(player, pilulas, False, pygame.sprite.collide_circle)
             if hits4:
-                for pilula in pilulas:
-                    pilula.kill()
+                now = pygame.time.get_ticks()
                 Player_presa = False
-                
+                for pilula in pilulas:
+                    pilula.kill() 
+                    
+            if not Player_presa:
+                not_now = pygame.time.get_ticks()
+                if (not_now - now) >= 15000:
+                    Player_presa = True
             # Verifica se houve colisão entre jogador e fantasma
             if Player_presa:
                 hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)

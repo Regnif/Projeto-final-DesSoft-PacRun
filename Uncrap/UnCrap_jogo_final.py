@@ -34,7 +34,7 @@ try:
         elif state == GAME:
             state, score = game_screen(screen)
         elif state == HELP:
-            state = help_screen(screen)
+             state = help_screen(screen)
         elif state == OVER:
             state = gameover_screen(screen, score)
         else:
