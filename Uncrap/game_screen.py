@@ -522,6 +522,10 @@ def game_screen(screen):
             score -= 100
             food_group = remake_map(assets["food_img"])
             all_sprites.add(food_group)
+            if len(pilulas) == 0:
+                pilula = Pilula(assets["pilula_img"])
+                pilulas.add(pilula)
+                all_sprites.add(pilula)
         
         # A cada loop, redesenha o fundo e os sprites
         screen.fill(BLACK)
