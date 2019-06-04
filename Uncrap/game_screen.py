@@ -331,7 +331,7 @@ class Pilula(pygame.sprite.Sprite):
         self.image.set_colorkey(WHITE)
         self.rect = self.image.get_rect()
         # Centraliza embaixo da tela.
-        self.rect.x = 40
+        self.rect.x = 1200
         self.rect.y = 40
         self.radius = 5
         

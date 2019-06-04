@@ -16,7 +16,7 @@ def gameover_screen(screen, score):
     high_scor = high_score(score)
     
     score_font = pygame.font.Font(path.join(fnt_dir, "PressStart2P.ttf"), 28)
-    
+    score_font2 = pygame.font.Font(path.join(fnt_dir, "PressStart2P.ttf"), 38)
     # Variável para o ajuste de velocidade
     clock = pygame.time.Clock()
 
@@ -47,10 +47,14 @@ def gameover_screen(screen, score):
         screen.fill(BLACK)
         screen.blit(background, background_rect)
 
-        text_surface = score_font.render("{0:08d} High score = {1:08d}".format(score, high_scor), True, YELLOW)
+        text_surface = score_font2.render("{0:08d}".format(score), True, YELLOW)
+        text_surface2 = score_font.render("High score = {0:08d}".format(high_scor), True, YELLOW)
         text_rect = text_surface.get_rect()
-        text_rect.midtop = (WIDTH / 2,  HEIGHT / 2)
+        text_rect2 = text_surface2.get_rect()
+        text_rect.midtop = (WIDTH / 2,  (HEIGHT / 2)-100)
+        text_rect2.midtop = (WIDTH / 2,  (HEIGHT / 2)+10)
         screen.blit(text_surface, text_rect)
+        screen.blit(text_surface2, text_rect2)
 
         # Depois de desenhar tudo, inverte o display.
         pygame.display.flip()
