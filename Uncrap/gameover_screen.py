@@ -47,7 +47,7 @@ def gameover_screen(screen, score):
         screen.fill(BLACK)
         screen.blit(background, background_rect)
 
-        text_surface = score_font.render("{0:08d}\nHigh score = {1:08d}".format(score, high_scor), True, YELLOW)
+        text_surface = score_font.render("{0:08d} High score = {1:08d}".format(score, high_scor), True, YELLOW)
         text_rect = text_surface.get_rect()
         text_rect.midtop = (WIDTH / 2,  HEIGHT / 2)
         screen.blit(text_surface, text_rect)

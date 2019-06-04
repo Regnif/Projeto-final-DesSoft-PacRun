@@ -121,7 +121,7 @@ class Mob(pygame.sprite.Sprite):
         self.radius = int(self.rect.width * .40 / 2)
         
     # Metodo que atualiza a posição do fantasma
-    def update(self):
+    def update(self, Player_presa):
         dx = self.player.rect.x - self.rect.x
         dy = self.player.rect.y - self.rect.y
         
@@ -141,8 +141,13 @@ class Mob(pygame.sprite.Sprite):
             
         self.previous_pos_x = self.rect.x
         self.previous_pos_y = self.rect.y
-        self.rect.x += self.speedx
-        self.rect.y += self.speedy
+        if Player_presa:
+            self.rect.x += self.speedx
+            self.rect.y += self.speedy
+        else:
+            self.rect.x -= self.speedx
+            self.rect.y -= self.speedy
+            
 
 
     def atualiza_velocidade(self):            
@@ -264,6 +269,7 @@ def remake_map(food_img):
             if tile == '0':
                 food_group.add(Food(food_img,x*40,y*40))
     return food_group
+
 # Classe que representa uma explosão 
 class Explosion(pygame.sprite.Sprite):
 
@@ -313,6 +319,23 @@ class Explosion(pygame.sprite.Sprite):
                 self.image = self.explosion_anim[self.frame]
                 self.rect = self.image.get_rect()
                 self.rect.center = center
+                
+class Pilula(pygame.sprite.Sprite):
+    
+    def __init__(self, pilula_img):
+        
+        pygame.sprite.Sprite.__init__(self)
+        
+        self.image = pilula_img
+        self.image = pygame.transform.scale(pilula_img,(40,40))
+        self.image.set_colorkey(WHITE)
+        self.rect = self.image.get_rect()
+        # Centraliza embaixo da tela.
+        self.rect.x = 40
+        self.rect.y = 40
+        self.radius = 5
+        
+        
 
 # Carrega todos os assets uma vez só.
 def load_assets(img_dir, snd_dir, fnt_dir):
@@ -325,6 +348,7 @@ def load_assets(img_dir, snd_dir, fnt_dir):
     assets["boom_sound"] = pygame.mixer.Sound(path.join(snd_dir, 'The_sound_of_death.wav'))
     assets["move_sound"] = pygame.mixer.Sound(path.join(snd_dir,'Waka_waka_sound.wav'))
     assets["food_img"] = pygame.image.load(path.join(img_dir, "comida.png")).convert()
+    assets["pilula_img"] = pygame.image.load(path.join(img_dir, "Pac.png")).convert()
     explosion_anim = []
     for i in range(9):
         filename = 'regularExplosion0{}.png'.format(i)
@@ -337,6 +361,9 @@ def load_assets(img_dir, snd_dir, fnt_dir):
     return assets
 
 def game_screen(screen):
+    
+    Player_presa = True
+    
     # Carrega todos os assets uma vez só e guarda em um dicionário
     assets = load_assets(img_dir, snd_dir, fnt_dir)
 
@@ -351,7 +378,10 @@ def game_screen(screen):
     # Cria um jogador. O construtor será chamado automaticamente.
     wall, wall_group, food_group = make_map(assets["ground_img"],assets["dirt_img"],assets["food_img"])
     player = Player(assets["player_img"], assets["move_sound"])
-
+    pilula = Pilula(assets["pilula_img"])
+    pilulas = pygame.sprite.Group()
+    pilulas.add(pilula)
+    
     # Carrega a fonte para desenhar o score.
     score_font = assets["score_font"]
 
@@ -359,7 +389,8 @@ def game_screen(screen):
     all_sprites = pygame.sprite.Group()
     all_sprites.add(player)
     all_sprites.add(food_group)
-
+    all_sprites.add(pilula)
+    
     # Cria um grupo só dos mobs
     mobs = pygame.sprite.Group()
     
@@ -367,7 +398,6 @@ def game_screen(screen):
     
     for i in range(1):
         m = Mob(assets["mob_img"], player)
-        all_sprites.add(m)
         mobs.add(m)
    
 
@@ -411,35 +441,47 @@ def game_screen(screen):
         # Depois de processar os eventos atualiza a acao de cada sprite.
         all_sprites.update()
         
+        mobs.update(Player_presa)
+
         if state == PLAYING:
+            #Verifica se houve colisao entre jogador e pilula
+            hits4 = pygame.sprite.spritecollide(player, pilulas, False, pygame.sprite.collide_circle)
+            if hits4:
+                for pilula in pilulas:
+                    pilula.kill()
+                Player_presa = False
+                
             # Verifica se houve colisão entre jogador e fantasma
-            hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)
-            if hits:
-                # Toca o som da colisão
-                boom_sound.play()
-                player.kill()
-                lives -= 1
-                explosao = Explosion(player.rect.center, assets["explosion_anim"])
-                all_sprites.add(explosao)
-                state = EXPLODING
-                explosion_tick = pygame.time.get_ticks()
-                explosion_duration = explosao.frame_ticks * len(explosao.explosion_anim) + 400
-           
+            if Player_presa:
+                hits = pygame.sprite.spritecollide(player, mobs, False, pygame.sprite.collide_circle)
+                if hits:
+                    # Toca o som da colisão
+                    boom_sound.play()
+                    player.kill()
+                    lives -= 1
+                    explosao = Explosion(player.rect.center, assets["explosion_anim"])
+                    all_sprites.add(explosao)
+                    state = EXPLODING
+                    explosion_tick = pygame.time.get_ticks()
+                    explosion_duration = explosao.frame_ticks * len(explosao.explosion_anim) + 400
+            else:
+                hits = pygame.sprite.spritecollide(player, mobs, True, pygame.sprite.collide_circle)
+                
             # Verifica se houve colisão entre jogador e paredes
-            hits = pygame.sprite.spritecollide(player, wall_group, False, pygame.sprite.collide_rect)
-            if hits:
+            hits2 = pygame.sprite.spritecollide(player, wall_group, False, pygame.sprite.collide_rect)
+            if hits2:
                 player.rollback()
             
             #Verifica se houve colisao entre jogador e comida
             
-            hits = pygame.sprite.spritecollide(player, food_group, True, pygame.sprite.collide_circle)
-            if hits:
+            hits3 = pygame.sprite.spritecollide(player, food_group, True, pygame.sprite.collide_circle)
+            if hits3:
                 score += 100
                 
             #Verifica se houve colisao entre mob e paredes
             for mob in mobs:
-                hits = pygame.sprite.spritecollide(mob, wall_group, False, pygame.sprite.collide_rect)
-                if hits:
+                hits5 = pygame.sprite.spritecollide(mob, wall_group, False, pygame.sprite.collide_rect)
+                if hits5:
                     mob.rollback()
             
         elif state == EXPLODING:
@@ -455,10 +497,9 @@ def game_screen(screen):
                         mob.player = player
         
         rodadas = 0 
-        if score % 15000 == 0 and score != 0:
+        if score % 10000 == 0 and score != 0:
             rodadas += 1
             m = Mob(assets["mob_img"], player)
-            all_sprites.add(m)
             mobs.add(m)
             score += 100
 
@@ -472,6 +513,7 @@ def game_screen(screen):
         screen.fill(BLACK)
         screen.blit(wall, (0,0))
         all_sprites.draw(screen)
+        mobs.draw(screen)
 
         # Desenha o score
         text_surface = score_font.render("{:08d}".format(score), True, YELLOW)
